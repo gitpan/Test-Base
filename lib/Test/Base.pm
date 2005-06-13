@@ -1,6 +1,8 @@
 package Test::Base;
 use Spiffy 0.24 -Base;
 use Spiffy ':XXX';
+our $VERSION = '0.41';
+
 my @test_more_exports;
 BEGIN {
     @test_more_exports = qw(
@@ -17,7 +19,7 @@ use Carp;
 our @EXPORT = (@test_more_exports, qw(
     is
 
-    blocks next_block
+    blocks next_block first_block
     delimiters spec_file spec_string 
     filters filters_delay filter_arguments
     run run_is run_is_deeply run_like run_unlike 
@@ -28,8 +30,6 @@ our @EXPORT = (@test_more_exports, qw(
 
     croak carp cluck confess
 ));
-
-our $VERSION = '0.40';
 
 field '_spec_file';
 field '_spec_string';
@@ -89,6 +89,8 @@ sub find_class {
     return $class if $class->can('new');
     $class = __PACKAGE__ . "::$suffix";
     return $class if $class->can('new');
+    eval "require $class";
+    return $class if $class->can('new');
     die "Can't find a class for $suffix";
 }
 
@@ -146,6 +148,12 @@ sub next_block() {
         $block->run_filters;
     }
     return $block;
+}
+
+sub first_block() {
+    (my ($self), @_) = find_my_self(@_);
+    $self->_next_list([]);
+    $self->next_block;
 }
 
 sub filters_delay() {
@@ -532,212 +540,6 @@ sub _get_filters {
     } keys(%Test::Base::Block::), qw( new DESTROY );
 }
 
-#===============================================================================
-# Test::Base::Filter
-#
-# This is the default class for handling Test::Base data filtering.
-#===============================================================================
-package Test::Base::Filter;
-use Spiffy -base;
-
-field 'block';
-
-our $arguments;
-sub arguments {
-    return undef unless defined $arguments;
-    my $args = $arguments;
-    $args =~ s/(\\[a-z])/'"' . $1 . '"'/gee;
-    return $args;
-}
-
-sub assert_scalar {
-    return if @_ == 1;
-    require Carp;
-    my $filter = (caller(1))[3];
-    $filter =~ s/.*:://;
-    Carp::croak "Input to the '$filter' filter must be a scalar, not a list";
-}
-
-sub norm {
-    $self->assert_scalar(@_);
-    my $text = shift || '';
-    $text =~ s/\015\012/\n/g;
-    $text =~ s/\r/\n/g;
-    return $text;
-}
-
-sub chomp {
-    map { CORE::chomp; $_ } @_;
-}
-
-sub unchomp {
-    map { $_ . "\n" } @_;
-}
-
-sub chop {
-    map { CORE::chop; $_ } @_;
-}
-
-sub append {
-    my $suffix = $self->arguments;
-    map { $_ . $suffix } @_;
-}
-
-sub trim {
-    map {
-        s/\A([ \t]*\n)+//;
-        s/(?<=\n)\s*\z//g;
-        $_;
-    } @_;
-}
-
-sub base64_decode {
-    $self->assert_scalar(@_);
-    require MIME::Base64;
-    MIME::Base64::decode_base64(shift);
-}
-
-sub base64_encode {
-    $self->assert_scalar(@_);
-    require MIME::Base64;
-    MIME::Base64::encode_base64(shift);
-}
-
-sub escape {
-    $self->assert_scalar(@_);
-    my $text = shift;
-    $text =~ s/(\\.)/eval "qq{$1}"/ge;
-    return $text;
-}
-
-sub eval {
-    $self->assert_scalar(@_);
-    my @return = CORE::eval(shift);
-    return $@ if $@;
-    return @return;
-}
-
-sub eval_stdout {
-    $self->assert_scalar(@_);
-    my $output = '';
-    Test::Base::tie_output(*STDOUT, $output);
-    CORE::eval(shift);
-    no warnings;
-    untie *STDOUT;
-    return $output;
-}
-
-sub eval_stderr {
-    $self->assert_scalar(@_);
-    my $output = '';
-    Test::Base::tie_output(*STDERR, $output);
-    CORE::eval(shift);
-    no warnings;
-    untie *STDERR;
-    return $output;
-}
-
-sub eval_all {
-    $self->assert_scalar(@_);
-    my $out = '';
-    my $err = '';
-    Test::Base::tie_output(*STDOUT, $out);
-    Test::Base::tie_output(*STDERR, $err);
-    my $return = CORE::eval(shift);
-    no warnings;
-    untie *STDOUT;
-    untie *STDERR;
-    return $return, $@, $out, $err;
-}
-
-sub exec_perl_stdout {
-    my $tmpfile = "/tmp/test-blocks-$$";
-    $self->_write_to($tmpfile, @_);
-    open my $execution, "$^X $tmpfile 2>&1 |"
-      or die "Couldn't open subprocess: $!\n";
-    local $/;
-    my $output = <$execution>;
-    close $execution;
-    unlink($tmpfile)
-      or die "Couldn't unlink $tmpfile: $!\n";
-    return $output;
-}
-
-sub _write_to {
-    my $filename = shift;
-    open my $script, ">$filename"
-      or die "Couldn't open $filename: $!\n";
-    print $script @_;
-    close $script
-      or die "Couldn't close $filename: $!\n";
-}
-
-sub yaml {
-    $self->assert_scalar(@_);
-    require YAML;
-    return YAML::Load(shift);
-}
-
-sub lines {
-    $self->assert_scalar(@_);
-    my $text = shift;
-    return () unless length $text;
-    my @lines = ($text =~ /^(.*\n?)/gm);
-    return @lines;
-}
-
-sub array {
-    [@_];
-}
-
-sub join {
-    my $string = $self->arguments;
-    $string = '' unless defined $string;
-    CORE::join $string, @_;
-}
-
-sub dumper {
-    no warnings 'once';
-    require Data::Dumper;
-    local $Data::Dumper::Sortkeys = 1;
-    local $Data::Dumper::Indent = 1;
-    local $Data::Dumper::Terse = 1;
-    Data::Dumper::Dumper(@_);
-}
-
-sub strict {
-    $self->assert_scalar(@_);
-    <<'...' . shift;
-use strict;
-use warnings;
-...
-}
-
-sub regexp {
-    $self->assert_scalar(@_);
-    my $text = shift;
-    my $flags = $self->arguments;
-    if ($text =~ /\n.*?\n/s) {
-        $flags = 'xism'
-          unless defined $flags;
-    }
-    else {
-        CORE::chomp($text);
-    }
-    $flags ||= '';
-    my $regexp = eval "qr{$text}$flags";
-    die $@ if $@;
-    return $regexp;
-}
-
-sub get_url {
-    $self->assert_scalar(@_);
-    my $url = shift;
-    CORE::chomp($url);
-    require LWP::Simple;
-    LWP::Simple::get($url);
-}
-    
 __DATA__
 
 =head1 NAME
@@ -755,7 +557,7 @@ A new test module:
     use MyProject;
     
     package MyProject::Test::Filter;
-    use base 'Test::Base::Filter';
+    use Test::Base::Filter -base;
 
     sub my_filter {
         return MyProject->do_something(shift);
@@ -772,7 +574,7 @@ A sample test:
     
     __END__
     
-    === Test one (name of test goes here)
+    === Test one (the name of the test)
     --- input my_filter
     my
     input
@@ -810,7 +612,7 @@ class that I<is> trivial. In fact it is as simple as two lines:
 A module called C<MyTestFramework.pm> containing those two lines, will
 give all the power of Test::More and all the power of Test::Base to
 every test file that uses it. As you build up the capabilities of
-C<MyTestFramework>, your tests will have all that power as well.
+C<MyTestFramework>, your tests will have all of that power as well.
 
 C<MyTestFramework> becomes a place for you to put all of your reusable
 testing bits. As you write tests, you will see patterns and duplication,
@@ -858,9 +660,9 @@ of that object's data sections. There is also a C<name> and a
 C<description> method for accessing those parts of the block if they
 were specified.
 
-C<blocks> can take an optional single argument, that indicates to only
-return the blocks that contain a particular named data section.
-Otherwise C<blocks> returns all blocks.
+The C<blocks> function can take an optional single argument, that
+indicates to only return the blocks that contain a particular named data
+section. Otherwise C<blocks> returns all blocks.
 
     my @all_of_my_blocks = blocks;
 
@@ -876,6 +678,11 @@ You can use the next_block function to iterate over all the blocks.
 
 It returns undef after all blocks have been iterated over. It can then
 be called again to reiterate.
+
+=head2 first_block()
+
+Returns the first block or undef if there are none. It resets the iterator to
+the C<next_block> function.
 
 =head2 run(&subroutine)
 
@@ -968,7 +775,7 @@ true value, causes the filtering to be delayed.
     use Test::Base;
     filters_delay;
     plan tests => 1 * blocks;
-    for my $block (@blocks) {
+    for my $block (blocks) {
         ...
         $block->run_filters;
         ok($block->is_filtered);
@@ -1122,10 +929,11 @@ the most readable format you can find, and let the filters translate
 it into what you really need for a test. It is easy to write your own
 filters as well.
 
-Test::Base allows you to specify a list of filters. The default
-filters are C<norm> and C<trim>. These filters will be applied (in
-order) to the data after it has been parsed from the specification and
-before it is set into its Test::Base::Block object.
+Test::Base allows you to specify a list of filters to each data
+section of each block. The default filters are C<norm> and C<trim>.
+These filters will be applied (in order) to the data after it has been
+parsed from the specification and before it is set into its
+Test::Base::Block object.
 
 You can add to the default filter list with the C<filters> function. You
 can specify additional filters to a specific block by listing them after
@@ -1183,177 +991,21 @@ context is considered a list of one element.
 
 Data accessor methods for blocks will return a list of values when used
 in list context, and the first element of the list in scalar context.
-This usually does the right thing, but be aware.
+This is usually "the right thing", but be aware.
 
-=head2 norm
+head2 The Stock Filters
 
-scalar => scalar
-
-Normalize the data. Change non-Unix line endings to Unix line endings.
-
-=head2 trim
-
-list => list
-
-Remove extra blank lines from the beginning and end of the data. This
-allows you to visually separate your test data with blank lines.
-
-=head2 chomp
-
-list => list
-
-Remove the final newline from each string value in a list.
-
-=head2 unchomp
-
-list => list
-
-Add a newline to each string value in a list.
-
-=head2 chop
-
-list => list
-
-Remove the final char from each string value in a list.
-
-=head2 append
-
-list => list
-
-Append a string to each element of a list.
-
-    --- numbers lines chomp append=-#\n join
-    one
-    two
-    three
-
-=head2 lines
-
-scalar => list
-
-Break the data into an anonymous array of lines. Each line (except
-possibly the last one if the C<chomp> filter came first) will have a
-newline at the end.
-
-=head2 array
-
-list => scalar
-
-Turn a list of values into an anonymous array reference.
-
-=head2 join
-
-list => scalar
-
-Join a list of strings into a scalar.
-
-=head2 eval
-
-scalar => list
-
-Run Perl's C<eval> command against the data and use the returned value
-as the data.
-
-=head2 eval_stdout
-
-scalar => scalar
-
-Run Perl's C<eval> command against the data and return the
-captured STDOUT.
-
-=head2 eval_stderr
-
-scalar => scalar
-
-Run Perl's C<eval> command against the data and return the
-captured STDERR.
-
-=head2 eval_all
-
-scalar => list
-
-Run Perl's C<eval> command against the data and return a list of 4
-values:
-
-    1) The return value
-    2) The error in $@
-    3) Captured STDOUT
-    4) Captured STDERR
-
-=head2 regexp[=xism]
-
-scalar => scalar
-
-The C<regexp> filter will turn your data section into a regular
-expression object. You can pass in extra flags after an equals sign.
-
-If the text contains more than one line and no flags are specified, then
-the 'xism' flags are assumed.
-
-=head2 get_url
-
-scalar => scalar
-
-The text is chomped and considered to be a url. Then LWP::Simple::get is
-used to fetch the contents of the url.
-
-=head2 exec_perl_stdout
-
-list => scalar
-
-Input Perl code is written to a temp file and run. STDOUT is captured and
-returned.
-
-=head2 yaml
-
-scalar => list
-
-Apply the YAML::Load function to the data block and use the resultant
-structure. Requires YAML.pm.
-
-=head2 dumper
-
-scalar => list
-
-Take a data structure (presumably from another filter like eval) and use
-Data::Dumper to dump it in a canonical fashion.
-
-=head2 strict
-
-scalar => scalar
-
-Prepend the string:
-
-    use strict; 
-    use warnings;
-
-to the block's text.
-
-=head2 base64_decode
-
-scalar => scalar
-
-Decode base64 data. Useful for binary tests.
-
-=head2 base64_encode
-
-scalar => scalar
-
-Encode base64 data. Useful for binary tests.
-
-=head2 escape
-
-scalar => scalar
-
-Unescape all backslash escaped chars.
+Test::Base comes with large set of stock filters. They are in the
+C<Test::Base::Filter> module. See L<Test::Base::Filter> for a listing and
+description of these filters.
 
 =head2 Rolling Your Own Filters
 
 Creating filter extensions is very simple. You can either write a
 I<function> in the C<main> namespace, or a I<method> in the
-C<Test::Base::Filter> namespace. In either case the text and any
-extra arguments are passed in and you return whatever you want the new
-value to be.
+C<Test::Base::Filter> namespace or a subclass of it. In either case the
+text and any extra arguments are passed in and you return whatever you
+want the new value to be.
 
 Here is a self explanatory example:
 
@@ -1366,7 +1018,7 @@ Here is a self explanatory example:
     }
         
     sub Test::Base::Filter::bar {
-        my $self = shift;
+        my $self = shift;       # The Test::Base::Filter object
         my $data = shift;
         my $args = $self->arguments;
         my $current_block_object = $self->block;

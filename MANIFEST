@@ -8,6 +8,7 @@ inc/Module/Install/Metadata.pm
 inc/Module/Install/Win32.pm
 inc/Module/Install/WriteAll.pm
 lib/Test/Base.pm
+lib/Test/Base/Filter.pm
 Makefile.PL
 MANIFEST			This list of files
 META.yml
@@ -39,6 +40,7 @@ t/filter_functions.t
 t/filters-append.t
 t/filters.t
 t/filters_map.t
+t/first_block.t
 t/get_url.t
 t/internals.t
 t/is.t
@@ -52,6 +54,7 @@ t/list.t
 t/main_filters.t
 t/name.t
 t/next.t
+t/no_plan.t
 t/normalize.t
 t/only.t
 t/oo.t

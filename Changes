@@ -1,4 +1,10 @@
 ---
+version: 0.41
+date:    Sun Jun 12 15:49:15 PDT 2005
+changes:
+- Add first_block() function
+- Split Test::Base::Filter into a separate module
+---
 version: 0.40
 date:    Sat Jun 11 20:55:42 PDT 2005
 changes:
