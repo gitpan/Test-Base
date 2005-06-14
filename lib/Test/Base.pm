@@ -1,7 +1,7 @@
 package Test::Base;
 use Spiffy 0.24 -Base;
 use Spiffy ':XXX';
-our $VERSION = '0.41';
+our $VERSION = '0.42';
 
 my @test_more_exports;
 BEGIN {
@@ -435,6 +435,10 @@ package Test::Base::Block;
 our @ISA = qw(Spiffy);
 
 our @EXPORT = qw(block_accessor);
+
+sub AUTOLOAD {
+    return;
+}
 
 sub block_accessor() {
     my $accessor = shift;

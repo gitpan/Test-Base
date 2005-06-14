@@ -16,6 +16,7 @@ README
 t/append.t
 t/arguments.t
 t/array.t
+t/autoload.t
 t/base64.t
 t/blocks-scalar.t
 t/blocks_grep.t
