@@ -1,10 +1,8 @@
-use Test::Base;
+use Test::Base tests => 1;
 
 filters qw(norm trim chomp);
 
-plan tests => 1 * blocks;
-
-is(next_block->input, "on\ntw\nthre\n");
+is next_block->input, "on\ntw\nthre\n";
 
 __END__
 ===

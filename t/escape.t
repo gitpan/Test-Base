@@ -1,11 +1,9 @@
-use Test::Base;
+use Test::Base tests => 2;
 
-plan tests => 1 * blocks;
-
-my @blocks = blocks;
-
-is($blocks[0]->escaped, "line1\nline2");
-is($blocks[1]->escaped, "	foo\n		bar\n");
+is next_block->escaped, 
+   "line1\nline2";
+is next_block->escaped,
+   "	foo\n		bar\n";
 
 __END__
 

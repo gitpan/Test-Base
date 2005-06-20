@@ -2,9 +2,9 @@ use Test::Base;
 
 plan tests => 3 * blocks;
 
-run_is('perl', 'dumper');
-run_is('dumper', 'perl');
-run_is('dumper', 'dumper');
+run_is perl => 'dumper';
+run_is dumper => 'perl';
+run_is dumper => 'dumper';
 
 __DATA__
 === Dumper Test

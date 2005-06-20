@@ -1,15 +1,13 @@
-use Test::Base;
+use Test::Base tests => 3;
 
 filters 'eval';
-
-plan tests => 3 * blocks;
 
 run_is_deeply qw(foo bar);
 
 run {
     my $block = shift;
-    ok(ref $block->foo);
-    ok(ref $block->bar);
+    ok ref $block->foo;
+    ok ref $block->bar;
 };
 
 __DATA__

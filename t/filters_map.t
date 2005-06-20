@@ -1,14 +1,12 @@
-use Test::Base;
-
-plan tests => 7;
+use Test::Base tests => 7;
 
 eval {
-filters_map {
-    perl => ['eval'],
-    text => ['chomp', 'lines', 'array'],
+    filters_map {
+        perl => ['eval'],
+        text => ['chomp', 'lines', 'array'],
+    };
 };
-};
-like($@, qr{Can't locate object method "filters_map"});
+like $@, qr{Can't locate object method "filters_map"};
 
 filters {
     perl => ['eval'],
@@ -17,9 +15,9 @@ filters {
 
 run {
     my $block = shift;
-    is(ref($block->perl), 'ARRAY');
-    is(ref($block->text), 'ARRAY');
-    is_deeply($block->perl, $block->text);
+    is ref($block->perl), 'ARRAY';
+    is ref($block->text), 'ARRAY';
+    is_deeply $block->perl, $block->text;
 };
 
 __DATA__

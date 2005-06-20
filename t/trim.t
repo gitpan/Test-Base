@@ -1,13 +1,11 @@
-use Test::Base;
-
-plan tests => 2 * blocks;
+use Test::Base tests => 4;
 
 my ($block1, $block2) = blocks;
 
-is($block1->foo, "line 1\nline 2\n");
-is($block1->bar, "line1\nline2\n");
-is($block2->foo, "aaa\n\nbbb\n");
-is($block2->bar, "\nxxxx\n\nyyyy\n\n");
+is $block1->foo, "line 1\nline 2\n";
+is $block1->bar, "line1\nline2\n";
+is $block2->foo, "aaa\n\nbbb\n";
+is $block2->bar, "\nxxxx\n\nyyyy\n\n";
 
 
 __END__

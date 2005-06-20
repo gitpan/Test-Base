@@ -12,6 +12,8 @@ requires(qw(
     Test::More 0.54
 ));
 
+clean_files('t/output');
+
 check_nmake();
 
 &WriteAll();

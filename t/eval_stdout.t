@@ -1,6 +1,6 @@
 use Test::Base tests => 1;
 
-is(next_block->perl, <<'...');
+is next_block->perl, <<'...';
 You are a foo!
 You are 1 2.
 ...

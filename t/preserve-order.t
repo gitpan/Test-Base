@@ -6,7 +6,7 @@ my $count = 0;
 sub test {
     my $num = shift;
     chomp $num;
-    is($num, ++$count);
+    is $num, ++$count;
 }
 
 __END__

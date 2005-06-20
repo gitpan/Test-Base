@@ -1,33 +1,31 @@
-use Test::Base;
+use Test::Base tests => 5;
 
-plan tests => 5;
-
-my @blocks = blocks;
+run {};
 
 eval {
-    filters('blah', 'blam');
+    filters 'blah', 'blam';
 };
-is("$@", "");
+is "$@", "";
 
 eval {
-    filters({foo => 'grate'});
+    filters {foo => 'grate'};
 };
-is("$@", "");
+is "$@", "";
 
 eval {
-    delimiters('***', '&&&');
+    delimiters '***', '&&&';
 };
-like("$@", qr{^Too late to call delimiters\(\)});
+like "$@", qr{^Too late to call delimiters\(\)};
 
 eval {
-    spec_file('foo.txt');
+    spec_file 'foo.txt';
 };
-like("$@", qr{^Too late to call spec_file\(\)});
+like "$@", qr{^Too late to call spec_file\(\)};
 
 eval {
-    spec_string("my spec\n");
+    spec_string "my spec\n";
 };
-like("$@", qr{^Too late to call spec_string\(\)});
+like "$@", qr{^Too late to call spec_string\(\)};
 
 __DATA__
 

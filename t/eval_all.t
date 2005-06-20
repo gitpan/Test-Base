@@ -1,6 +1,4 @@
-use Test::Base;
-
-plan tests => 1 * blocks;
+use Test::Base tests => 2;
 
 filters {
     in => [qw(eval_all array)],
@@ -11,17 +9,17 @@ run_is_deeply in => 'out';
 
 __DATA__
 ===
---- in
+--- (in)
 print "hi";
 warn "hello\n";
 print "bye";
 print STDERR "baby";
 die "darn\n";
---- out
+--- (out)
 [undef, "darn\n", "hibye", "hello\nbaby"]
 
 ===
---- in
+--- (in)
 [1..3];
---- out
+--- (out)
 [[1,2,3], '', '', '']

@@ -1,6 +1,4 @@
-use Test::Base;
-
-plan tests => 2 * blocks;
+use Test::Base tests => 2;
 
 run_unlike('html', 're1');
 run_is 're1' => 're2';

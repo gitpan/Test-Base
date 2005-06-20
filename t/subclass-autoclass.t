@@ -6,20 +6,20 @@ BEGIN {
 }
 
 sub run_orama {
-    pass('Testorama EXPORT ok');;
+    pass 'Testorama EXPORT ok';
 }
 
 package Test::Base::Block;
 
 sub foofoo {
-    Test::More::pass('Test::Base::Block ok');
+    Test::More::pass 'Test::Base::Block ok';
 }
 
 package Testorama::Filter;
 use base 'Test::Base::Filter';
 
 sub rama_rama {
-    Test::More::pass('Testorama::Filter ok');
+    Test::More::pass 'Testorama::Filter ok';
 }
 
 package main;

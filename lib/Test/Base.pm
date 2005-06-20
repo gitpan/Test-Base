@@ -1,7 +1,12 @@
+# TODO:
+#
+# * Allow single line data section on same line as name
+# * Allow a filter to be called more than once on a section
+#
 package Test::Base;
 use Spiffy 0.24 -Base;
 use Spiffy ':XXX';
-our $VERSION = '0.42';
+our $VERSION = '0.43';
 
 my @test_more_exports;
 BEGIN {
@@ -22,7 +27,7 @@ our @EXPORT = (@test_more_exports, qw(
     blocks next_block first_block
     delimiters spec_file spec_string 
     filters filters_delay filter_arguments
-    run run_is run_is_deeply run_like run_unlike 
+    run run_compare run_is run_is_deeply run_like run_unlike 
     WWW XXX YYY ZZZ
     tie_output
 
@@ -79,6 +84,20 @@ sub import() {
     _strict_warnings();
     goto &Spiffy::import;
 }
+
+# Wrap Test::Builder::plan
+my $plan_code = \&Test::Builder::plan;
+my $Have_Plan = 0;
+{
+    no warnings 'redefine';
+    *Test::Builder::plan = sub {
+        $Have_Plan = 1;
+        goto &$plan_code;
+    };
+}
+
+my $DIED = 0;
+$SIG{__DIE__} = sub { $DIED = 1; die @_ };
 
 sub block_class  { $self->find_class('Block') }
 sub filter_class { $self->find_class('Filter') }
@@ -224,7 +243,7 @@ sub is($$;$) {
     }
 }
 
-sub run(&) {
+sub run(&;$) {
     (my ($self), @_) = find_my_self(@_);
     my $callback = shift;
     for my $block (@{$self->block_list}) {
@@ -233,9 +252,51 @@ sub run(&) {
     }
 }
 
+my $name_error = "Can't determine section names";
+sub _section_names {
+    return @_ if @_ == 2;
+    my $block = $self->first_block
+      or croak $name_error;
+    my @names = @{$block->{_section_order}[0] || []};
+    croak "$name_error. Need two sections in first block"
+      unless @names == 2;
+    return @names;
+}
+
+sub _assert_plan {
+    plan('no_plan') unless $Have_Plan;
+}
+
+sub END {
+    run_compare() unless $Have_Plan or $DIED;
+}
+
+sub run_compare() {
+    (my ($self), @_) = find_my_self(@_);
+    $self->_assert_plan;
+    my ($x, $y) = $self->_section_names(@_);
+    local $Test::Builder::Level = $Test::Builder::Level + 1;
+    for my $block (@{$self->block_list}) {
+        next unless exists($block->{$x}) and exists($block->{$y});
+        $block->run_filters unless $block->is_filtered;
+        if (ref $block->$x) {
+            is_deeply($block->$x, $block->$y,
+                $block->name ? $block->name : ());
+        }
+        elsif (ref $block->$y eq 'Regexp') {
+            my $regexp = ref $y ? $y : $block->$y;
+            like($block->$x, $regexp, $block->name ? $block->name : ());
+        }
+        else {
+            is($block->$x, $block->$y, $block->name ? $block->name : ());
+        }
+    }
+}
+
 sub run_is() {
     (my ($self), @_) = find_my_self(@_);
-    my ($x, $y) = @_;
+    $self->_assert_plan;
+    my ($x, $y) = $self->_section_names(@_);
     local $Test::Builder::Level = $Test::Builder::Level + 1;
     for my $block (@{$self->block_list}) {
         next unless exists($block->{$x}) and exists($block->{$y});
@@ -248,7 +309,8 @@ sub run_is() {
 
 sub run_is_deeply() {
     (my ($self), @_) = find_my_self(@_);
-    my ($x, $y) = @_;
+    $self->_assert_plan;
+    my ($x, $y) = $self->_section_names(@_);
     for my $block (@{$self->block_list}) {
         next unless exists($block->{$x}) and exists($block->{$y});
         $block->run_filters unless $block->is_filtered;
@@ -260,7 +322,8 @@ sub run_is_deeply() {
 
 sub run_like() {
     (my ($self), @_) = find_my_self(@_);
-    my ($x, $y) = @_;
+    $self->_assert_plan;
+    my ($x, $y) = $self->_section_names(@_);
     for my $block (@{$self->block_list}) {
         next unless exists($block->{$x}) and defined($y);
         $block->run_filters unless $block->is_filtered;
@@ -273,7 +336,8 @@ sub run_like() {
 
 sub run_unlike() {
     (my ($self), @_) = find_my_self(@_);
-    my ($x, $y) = @_;
+    $self->_assert_plan;
+    my ($x, $y) = $self->_section_names(@_);
     for my $block (@{$self->block_list}) {
         next unless exists($block->{$x}) and defined($y);
         $block->run_filters unless $block->is_filtered;
@@ -339,7 +403,7 @@ sub _make_block {
     my $block = $self->block_class->new;
     $hunk =~ s/\A\Q${cd}\E[ \t]*(.*)\s+// or die;
     my $name = $1;
-    my @parts = split /^\Q${dd}\E +(\w+) *(.*)?\n/m, $hunk;
+    my @parts = split /^\Q${dd}\E +\(?(\w+)\)? *(.*)?\n/m, $hunk;
     my $description = shift @parts;
     $description ||= '';
     unless ($description =~ /\S/) {
@@ -354,6 +418,14 @@ sub _make_block {
         my ($type, $filters, $value) = splice(@parts, 0, 3);
         $self->_check_reserved($type);
         $value = '' unless defined $value;
+        $filters = '' unless defined $filters;
+        if ($filters =~ /:(\s|\z)/) {
+            croak "Extra lines not allowed in '$type' section"
+              if $value =~ /\S/;
+            ($filters, $value) = split /\s*:(?:\s+|\z)/, $filters, 2;
+            $value = '' unless defined $value;
+            $value =~ s/^\s*(.*?)\s*$/$1/;
+        }
         $section_map->{$type} = {
             filters => $filters,
         };
@@ -386,7 +458,6 @@ sub _spec_init {
     return $spec;
 }
 
-# XXX Copied from Spiffy. Refactor at some point.
 sub _strict_warnings() {
     require Filter::Util::Call;
     my $done = 0;
@@ -498,7 +569,7 @@ sub run_filters {
                 my $filter_object = $self->blocks_object->filter_class->new;
                 die "Can't find a function or method for '$filter' filter\n"
                   unless $filter_object->can($filter);
-                $filter_object->block($self);
+                $filter_object->current_block($self);
                 @value = $filter_object->$filter(@value);
             }
             # Set the value after each filter since other filters may be
@@ -531,7 +602,6 @@ sub _get_filters {
             push @append, $filter;
         }
         else {
-            @filters = grep { $_ ne $filter } @filters;
             push @filters, $filter;
         }
     }
@@ -704,7 +774,7 @@ block object to the subroutine.
         is(process($block->foo), $block->bar, $block->name);
     };
 
-=head2 run_is(data_name1, data_name2)
+=head2 run_is([data_name1, data_name2])
 
 Many times you simply want to see if two data sections are equivalent in
 every block, probably after having been run through one or more filters.
@@ -714,14 +784,17 @@ comparing the two sections.
 
     run_is 'foo', 'bar';
 
-NOTE: Test::Base will silently ignore any blocks that don't contain both
-sections.
+If no data sections are given C<run_is> will try to detect them
+automatically.
 
-=head2 run_is_deeply(data_name1, data_name2)
+NOTE: Test::Base will silently ignore any blocks that don't contain
+both sections.
+
+=head2 run_is_deeply([data_name1, data_name2])
 
 Like C<run_is> but uses C<is_deeply> for complex data structure comparison.
 
-=head2 run_like(data_name, regexp | data_name);
+=head2 run_like([data_name, regexp | data_name]);
 
 The C<run_like> function is similar to C<run_is> except the second
 argument is a regular expression. The regexp can either be a C<qr{}>
@@ -731,12 +804,21 @@ expression.
     run_like 'foo', qr{<html.*};
     run_like 'foo', 'match';
 
-=head2 run_unlike(data_name, regexp | data_name);
+=head2 run_unlike([data_name, regexp | data_name]);
 
 The C<run_unlike> function is similar to C<run_like>, except the opposite.
 
     run_unlike 'foo', qr{<html.*};
     run_unlike 'foo', 'no_match';
+
+=head2 run_compare(data_name1, data_name2)
+
+The C<run_compare> function is like the C<run_is>, C<run_is_deeply> and
+the C<run_like> functions all rolled into one. It loops over each
+relevant block and determines what type of comparison to do.
+
+NOTE: If you do not specify either a plan, or run any tests, the
+C<run_compare> function will automatically be run.
 
 =head2 delimiters($block_delimiter, $data_delimiter)
 
@@ -1146,7 +1228,7 @@ feature indeed.
 
 =head1 HISTORY
 
-This module started its life with the horrible and ridicule invoking
+This module started its life with the horrible and ridicule inducing
 name C<Test::Chunks>. It was renamed to C<Test::Base> with the hope
 that it would be seen for the very useful module that it has become. If
 you are switching from C<Test::Chunks> to C<Test::Base>, simply

@@ -3,10 +3,12 @@
 use Test::Base tests => 4;
 
 eval {
-    run { ok(1) };
+    run { pass };
 };
 
-like("$@", qr/Can't find a function or method for/, 'expect an error');
+like "$@",
+     qr/Can't find a function or method for/,
+     'expect an error';
 
 __END__
 === One

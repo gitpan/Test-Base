@@ -1,17 +1,12 @@
 use Test::Base;
 
-if (eval("require YAML; 1")) {
-    plan tests => 1 * blocks;
-}
-else {
-    plan skip_all => "YAML.pm required for this test"; exit;
-}
+plan eval { require YAML; 1 }
+  ? (tests => 1 * blocks)
+  : skip_all => 'Requires YAML';
 
 my ($block) = blocks;
 
-eval {
-    XXX($block->text)
-};
+eval { XXX($block->text) };
 is $@, $block->xxx, $block->name;
 
 __DATA__
@@ -22,4 +17,4 @@ __DATA__
 ---
 foo: bar
 ...
-  at t/xxx.t line 13
+  at t/xxx.t line 9

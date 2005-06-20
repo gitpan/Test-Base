@@ -7,7 +7,7 @@ plan tests => 3 * blocks;
 
 run {
     my $block = shift;
-    is(ref($block), 'Test::Base::Block');
+    is ref($block), 'Test::Base::Block';
 };
 
 my @blocks = blocks;

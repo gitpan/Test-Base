@@ -5,7 +5,7 @@ run {};
 sub Test::Base::Filter::something {
     my $self = shift;
     my $value = shift;
-    my $arguments = $self->arguments;
+    my $arguments = $self->current_arguments;
     is $value, 
        "candle\n", 
        'value is ok';

@@ -4,14 +4,16 @@ my $plan = 1 * blocks('foo') + 3;
 
 plan tests => $plan;
 
-is($plan, 5, 'Make sure plan adds up');
+is $plan, 5, 'Make sure plan adds up';
 
 for my $block (blocks('foo')) {
-    is($block->foo, exists($block->{bar}) ? $block->bar : 'no bar');
+    is $block->foo,
+       exists($block->{bar}) ? $block->bar : 'no bar';
 }
 
 eval { blocks(foo => 'bar') };
-like("$@", qr{^Invalid arguments passed to 'blocks'});
+like "$@",
+     qr{^Invalid arguments passed to 'blocks'};
 
 run_is foo => 'bar';
 

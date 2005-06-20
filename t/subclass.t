@@ -1,18 +1,16 @@
 use lib 't';
-use TestBass;
-
-plan tests => 7;
+use TestBass tests => 7;
 
 eval "use Test::Base";
-is("$@", '', 'ok to import parent class *after* subclass');
+is "$@", '', 'ok to import parent class *after* subclass';
 
 my @blocks = blocks;
 
-is(ref(default_object), 'TestBass');
+is ref(default_object), 'TestBass';
 
-is($blocks[0]->el_nombre, 'Test One');
+is $blocks[0]->el_nombre, 'Test One';
 
-ok($blocks[0]->can('feedle'), 'Does feedle method exist?');
+ok $blocks[0]->can('feedle'), 'Does feedle method exist?';
 
 run_is xxx => 'yyy';
 

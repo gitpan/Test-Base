@@ -1,9 +1,5 @@
 use Test::Base;
 
-plan tests => 1 * blocks;
-
-run_is perl => 'strict';
-
 __DATA__
 === Strict Test
 

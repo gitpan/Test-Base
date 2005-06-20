@@ -2,11 +2,9 @@
 # specification, between <<< and >>>. Not making this an official
 # feature yet, until I decide whether I like it.
 
-use Test::Base;
+use Test::Base tests => 2;
 
-plan tests => 1 * blocks;
-
-run_is x => 'y';
+run_is;
 
 sub reverse { join '', reverse split '', shift }
 

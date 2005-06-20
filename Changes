@@ -1,4 +1,24 @@
 ---
+version: 0.43
+date:    Sun Jun 19 03:14:40 PDT 2005
+changes:
+- change Test::Base::Filter::block to current_block.
+- change Test::Base::Filter::arguments to current_arguments.
+- add split and Split filters
+- add join and Join filters
+- add reverse and Reverse filters
+- add hash filter
+- allow (parens) around a data section name for readability.
+- allow regexps on split
+- allow for compact, one-line data sections
+- allow for repeated filters
+- detect sections names automatically
+- import XXX stuff into Filter class
+- add run_compare
+- automatically set no_plan sometimes
+- automatically run run_compare if no plan set at END
+- massive refactoring of all tests
+---
 version: 0.42
 date:    Tue Jun 14 09:31:25 PDT 2005
 changes:

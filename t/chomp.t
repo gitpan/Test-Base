@@ -6,9 +6,9 @@ plan tests => 1 * blocks;
 
 my @blocks = blocks;
 
-is($blocks[0]->input, "I am the foo");
-is($blocks[1]->input, "One\n\nTwo\n\nThree");
-is($blocks[2]->input, "Che!\n");
+is $blocks[0]->input, "I am the foo";
+is $blocks[1]->input, "One\n\nTwo\n\nThree";
+is $blocks[2]->input, "Che!\n";
 
 __END__
 ===

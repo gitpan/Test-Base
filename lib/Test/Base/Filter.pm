@@ -1,17 +1,20 @@
+#. TODO:
+#.
+
 #===============================================================================
-# Test::Base::Filter
-#
 # This is the default class for handling Test::Base data filtering.
 #===============================================================================
 package Test::Base::Filter;
 use Spiffy -Base;
+use Spiffy ':XXX';
 
-field 'block';
+field 'current_block';
 
 our $arguments;
-sub arguments {
+sub current_arguments {
     return undef unless defined $arguments;
     my $args = $arguments;
+    $args =~ s/(\\s)/ /g;
     $args =~ s/(\\[a-z])/'"' . $1 . '"'/gee;
     return $args;
 }
@@ -24,14 +27,54 @@ sub assert_scalar {
     Carp::croak "Input to the '$filter' filter must be a scalar, not a list";
 }
 
+sub _apply_deepest {
+    my $method = shift;
+    return () unless @_;
+    if (ref $_[0] eq 'ARRAY') {
+        for my $aref (@_) {
+            @$aref = $self->_apply_deepest($method, @$aref);
+        }
+        return @_;
+    }
+    $self->$method(@_);
+}
+
+sub _split_array {
+    map {
+        [$self->split($_)];
+    } @_;
+}
+
+sub _peel_deepest {
+    return () unless @_;
+    if (ref $_[0] eq 'ARRAY') {
+        if (ref $_[0]->[0] eq 'ARRAY') {
+            for my $aref (@_) {
+                @$aref = $self->_peel_deepest(@$aref);
+            }
+            return @_;
+        }
+        return map { $_->[0] } @_;
+    }
+    return @_;
+}
+
 #===============================================================================
+# these filters work on the leaves of nested arrays
+#===============================================================================
+sub Join { $self->_peel_deepest($self->_apply_deepest(join => @_)) }
+sub Reverse { $self->_apply_deepest(reverse => @_) }
+sub Split { $self->_apply_deepest(_split_array => @_) }
+sub Sort { $self->_apply_deepest(sort => @_) }
+
+
 sub append {
-    my $suffix = $self->arguments;
+    my $suffix = $self->current_arguments;
     map { $_ . $suffix } @_;
 }
 
 sub array {
-    [@_];
+    return [@_];
 }
 
 sub base64_decode {
@@ -123,6 +166,20 @@ sub exec_perl_stdout {
     return $output;
 }
 
+sub flatten {
+    $self->assert_scalar(@_);
+    my $ref = shift;
+    if (ref($ref) eq 'HASH') {
+        return map {
+            ($_, $ref->{$_});
+        } sort keys %$ref;
+    }
+    if (ref($ref) eq 'ARRAY') {
+        return @$ref;
+    }
+    die "Can only flatten a hash or array ref";
+}
+
 sub get_url {
     $self->assert_scalar(@_);
     my $url = shift;
@@ -130,9 +187,18 @@ sub get_url {
     require LWP::Simple;
     LWP::Simple::get($url);
 }
-    
+
+sub hash {
+    return +{ @_ };
+}
+
+sub head {
+    my $size = $self->current_arguments || 1;
+    return splice(@_, 0, $size);
+}
+
 sub join {
-    my $string = $self->arguments;
+    my $string = $self->current_arguments;
     $string = '' unless defined $string;
     CORE::join $string, @_;
 }
@@ -153,10 +219,24 @@ sub norm {
     return $text;
 }
 
+sub prepend {
+    my $prefix = $self->current_arguments;
+    map { $prefix . $_ } @_;
+}
+
+sub read_file {
+    $self->assert_scalar(@_);
+    my $file = shift;
+    CORE::chomp $file;
+    open my $fh, $file
+      or die "Can't open '$file' for input:\n$!";
+    CORE::join '', <$fh>;
+}
+
 sub regexp {
     $self->assert_scalar(@_);
     my $text = shift;
-    my $flags = $self->arguments;
+    my $flags = $self->current_arguments;
     if ($text =~ /\n.*?\n/s) {
         $flags = 'xism'
           unless defined $flags;
@@ -170,12 +250,46 @@ sub regexp {
     return $regexp;
 }
 
+sub reverse {
+    CORE::reverse(@_);
+}
+
+sub slice {
+    die "Invalid args for slice"
+      unless $self->current_arguments =~ /^(\d+)(?:,(\d))?$/;
+    my ($x, $y) = ($1, $2);
+    $y = $x if not defined $y;
+    die "Invalid args for slice"
+      if $x > $y;
+    return splice(@_, $x, 1 + $y - $x);
+}
+
+sub sort {
+    CORE::sort(@_);
+}
+
+sub split {
+    $self->assert_scalar(@_);
+    my $separator = $self->current_arguments;
+    if (defined $separator and $separator =~ s{^/(.*)/$}{$1}) {
+        my $regexp = $1;
+        $separator = qr{$regexp};
+    }
+    $separator = qr/\s+/ unless $separator;
+    CORE::split $separator, shift;
+}
+
 sub strict {
     $self->assert_scalar(@_);
     <<'...' . shift;
 use strict;
 use warnings;
 ...
+}
+
+sub tail {
+    my $size = $self->current_arguments || 1;
+    return splice(@_, @_ - $size, $size);
 }
 
 sub trim {
@@ -188,6 +302,24 @@ sub trim {
 
 sub unchomp {
     map { $_ . "\n" } @_;
+}
+
+sub write_file {
+    my $file = $self->current_arguments
+      or die "No file specified for write_file filter";
+    if ($file =~ /(.*)[\\\/]/) {
+        my $dir = $1;
+        if (not -e $dir) {
+            require File::Path;
+            File::Path::mkpath($dir)
+              or die "Can't create $dir";
+        }
+    }
+    open my $fh, ">$file"
+      or die "Can't open '$file' for output\n:$!";
+    print $fh @_;
+    close $fh;
+    return $file;
 }
 
 sub yaml {
@@ -329,6 +461,12 @@ list => scalar
 Input Perl code is written to a temp file and run. STDOUT is captured and
 returned.
 
+=head2 flatten
+
+scalar => list
+
+Takes a hash or array ref and flattens it to a list.
+
 =head2 get_url
 
 scalar => scalar
@@ -336,11 +474,29 @@ scalar => scalar
 The text is chomped and considered to be a url. Then LWP::Simple::get is
 used to fetch the contents of the url.
 
+=head2 hash
+
+list => scalar
+
+Turn a list of key/value pairs into an anonymous hash reference.
+
+=head2 head[=number]
+
+list => list
+
+Takes a list and returns a number of the elements from the front of it. The
+default number is one.
+
 =head2 join
 
 list => scalar
 
 Join a list of strings into a scalar.
+
+=head2 Join
+
+Join the list of strings inside a list of array refs and return the
+strings in place of the array refs.
 
 =head2 lines
 
@@ -356,6 +512,18 @@ scalar => scalar
 
 Normalize the data. Change non-Unix line endings to Unix line endings.
 
+=head2 prepend=string
+
+list => list
+
+Prepend a string onto each of a list of strings.
+
+=head2 read_file
+
+scalar => scalar
+
+Read the file named by the current content and return the file's content.
+
 =head2 regexp[=xism]
 
 scalar => scalar
@@ -365,6 +533,49 @@ expression object. You can pass in extra flags after an equals sign.
 
 If the text contains more than one line and no flags are specified, then
 the 'xism' flags are assumed.
+
+=head2 reverse
+
+list => list
+
+Reverse the elements of a list.
+
+=head2 Reverse
+
+list => list
+
+Reverse the list of strings inside a list of array refs.
+
+=head2 slice=x[,y]
+
+list => list
+
+Returns the element number x through element number y of a list.
+
+=head2 sort
+
+list => list
+
+Sorts the elements of a list in character sort order.
+
+=head2 Sort
+
+list => list
+
+Sort the list of strings inside a list of array refs.
+
+=head2 split[=string|pattern]
+
+scalar => list
+
+Split a string in into a list. Takes a optional string or regexp as a
+parameter. Defaults to /\s+/. Same as Perl C<split>.
+
+=head2 Split[=string|pattern]
+
+list => list
+
+Split each of a list of strings and turn them into array refs.
 
 =head2 strict
 
@@ -376,6 +587,13 @@ Prepend the string:
     use warnings;
 
 to the block's text.
+
+=head2 tail[=number]
+
+list => list
+
+Return a number of elements from the end of a list. The default
+number is one.
 
 =head2 trim
 
@@ -389,6 +607,12 @@ allows you to visually separate your test data with blank lines.
 list => list
 
 Add a newline to each string value in a list.
+
+=head2 write_file[=filename]
+
+scalar => scalar
+
+Write the content of the section to the named file. Return the filename.
 
 =head2 yaml
 

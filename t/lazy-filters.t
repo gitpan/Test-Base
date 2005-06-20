@@ -1,9 +1,7 @@
-use Test::Base;
-
-plan tests => 2;
+use Test::Base tests => 2;
 
 sub shouldnt_be_run {
-    fail("shouldnt_be_run was run");
+    fail "shouldnt_be_run was run";
 }
 
 run_is foo => 'bar';

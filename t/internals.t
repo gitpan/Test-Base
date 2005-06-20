@@ -1,13 +1,10 @@
 # Each filter should have access to blocks/block internals.
-use Test::Base;
-
-plan tests => 20 * 2;
+use Test::Base tests => 20 * 2;
 
 run {};
 
 package Test::Base::Filter;
 use Test::More;
-use Spiffy ':XXX';
 
 sub foo {
     my $self = shift;
@@ -24,7 +21,7 @@ sub foo {
          'Filter value is correct';   
 
 # Test access to Test::Base::Block object.
-    my $block = $self->block;
+    my $block = $self->current_block;
     is ref($block), 
        'Test::Base::Block', 
        'Have a reference to our block object';
@@ -42,7 +39,7 @@ sub foo {
        $description,
        'description is correct';
 
-    my $original = shift || "This is some text.\n";
+    my $original = shift || "This is some text.";
     is $block->original_values->{xxx},
        $original,
        'Access to the original value';
@@ -97,8 +94,7 @@ sub foo {
 
     my $spec = <<END;
 === One
---- xxx chomp foo
-This is some text.
+--- xxx foo: This is some text.
 === Two
 This is the 2nd description.
 Right here.
@@ -131,8 +127,7 @@ sub bar {
 
 __END__
 === One
---- xxx chomp foo
-This is some text.
+--- xxx foo: This is some text.
 === Two
 This is the 2nd description.
 Right here.

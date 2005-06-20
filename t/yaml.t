@@ -1,15 +1,15 @@
 use Test::Base;
 
-eval { require YAML; 1 } or
-plan skip_all => 'Requires YAML';
-plan tests => 1 * blocks;
+plan eval { require YAML; 1 }
+  ? (tests => 1 * blocks)
+  : skip_all => 'Requires YAML';
 
 filters {
     data1 => 'yaml',
     data2 => 'eval',
 };
 
-run_is_deeply 'data1', 'data2';
+run_compare;
 
 __END__
 === YAML Hashes

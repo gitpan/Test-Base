@@ -1,14 +1,14 @@
 use Test::Base tests => 3;
 
-my @blocks = blocks();
+run {};
 
 sub foo {
-    is(filter_arguments, '123,456');
+    is filter_arguments, '123,456';
 }
 
 sub bar {
-    is(filter_arguments, '---holy-crow+++');
-    is($_, "one\n  two\n");
+    is filter_arguments, '---holy-crow+++';
+    is $_, "one\n  two\n";
 }
 
 __DATA__

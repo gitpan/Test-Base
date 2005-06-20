@@ -1,8 +1,6 @@
-use Test::Base;
+use Test::Base tests => 2;
 
 delimiters qw($$$ ***);
-
-plan tests => 1 * blocks;
 
 run {
     ok(shift);

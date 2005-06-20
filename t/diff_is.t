@@ -1,21 +1,19 @@
 use Test::Base;
 
-eval { require Text::Diff; 1 } or
-plan skip_all => 'Requires Test::Diff';
-plan tests => 3;
+plan eval { require Text::Diff; 1 }
+  ? (tests => 3)
+  : skip_all => 'Requires Test::Diff';
 
 filters { 
     test => [qw(exec_perl_stdout smooth_output)],
     expected => 'smooth_output',
 };
-run_is test => 'expected';
+run_is;
 
 sub smooth_output { 
-    local $_ = shift;
     s/test-blocks-\d+/test-blocks-321/;
     s/at line \d+\)/at line 000)/;
     s/^\n//gm;
-    return $_;
 }
 
 __DATA__

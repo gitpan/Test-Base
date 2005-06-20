@@ -1,10 +1,8 @@
-use Test::Base;
+use Test::Base tests => 3;
 
-plan tests => 1 * blocks;
-
-is(next_block->input, 'onetwothree');
-is(next_block->input, 'one=two=three');
-is(next_block->input, "one\n\ntwo\n\nthree");
+is next_block->input, 'onetwothree';
+is next_block->input, 'one=two=three';
+is next_block->input, "one\n\ntwo\n\nthree";
 
 __DATA__
 ===

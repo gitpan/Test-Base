@@ -1,28 +1,19 @@
-use Test::Base;
+use Test::Base tests => 3;
 
-plan tests => 3;
+run { pass };
 
-run {
-    ok(1);
-};
+is scalar(blocks), 1;
 
-is(scalar(blocks), 1);
-
-my ($block) = blocks;
-is($block->foo, "2\n");
+is first_block->foo, "2";
 
 __DATA__
 === One
---- foo
-1
+--- foo: 1
 === Two
 --- ONLY
---- foo
-2
+--- foo: 2
 === Three
---- foo
-3
+--- foo: 3
 --- ONLY
 === Four
---- foo
-4
+--- foo: 4

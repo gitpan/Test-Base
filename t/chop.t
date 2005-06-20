@@ -5,10 +5,10 @@ filters qw(norm trim chomp);
 plan tests => 1 * blocks;
 
 my $c = next_block;
-is_deeply($c->input, $c->output);
+is_deeply $c->input, $c->output;
 
 $c = next_block;
-is($c->input, $c->output);
+is $c->input, $c->output;
 
 __END__
 ===

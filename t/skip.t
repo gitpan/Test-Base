@@ -1,10 +1,6 @@
-use Test::Base;
+use Test::Base tests => 5;
 
-plan tests => 5;
-
-run {
-    ok(1);
-};
+run { pass };
 
 is scalar(blocks), 2;
 

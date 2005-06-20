@@ -1,14 +1,11 @@
-use Test::Base;
+use Test::Base tests => 1;
 
-plan tests => 1;
-
-my ($block) = blocks;
-is_deeply $block->foo, [qw(one two three)];
+is_deeply first_block->foo, [qw(one two three)];
 
 __DATA__
 
 
-===
+=== Create an array reference
 --- foo lines chomp array
 one
 two

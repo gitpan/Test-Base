@@ -1,9 +1,9 @@
 use Test::Base tests => 5;
 
-is(next_block->xxx, "I lmike mike\n");
-is(next_block->xxx, "I like mikey");
-is(next_block->xxx, "123\n");
-is(next_block->xxx, "I like MIKEY");
+is next_block->xxx, "I lmike mike\n";
+is next_block->xxx, "I like mikey";
+is next_block->xxx, "123\n";
+is next_block->xxx, "I like MIKEY";
 
 run_is xxx => 'yyy';
 

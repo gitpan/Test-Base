@@ -147,7 +147,7 @@ EXPORTED FUNCTIONS
             is(process($block->foo), $block->bar, $block->name);
         };
 
-  run_is(data_name1, data_name2)
+  run_is([data_name1, data_name2])
     Many times you simply want to see if two data sections are equivalent in
     every block, probably after having been run through one or more filters.
     With the "run_is" function, you can just pass the names of any two data
@@ -156,14 +156,17 @@ EXPORTED FUNCTIONS
 
         run_is 'foo', 'bar';
 
+    If no data sections are given "run_is" will try to detect them
+    automatically.
+
     NOTE: Test::Base will silently ignore any blocks that don't contain both
     sections.
 
-  run_is_deeply(data_name1, data_name2)
+  run_is_deeply([data_name1, data_name2])
     Like "run_is" but uses "is_deeply" for complex data structure
     comparison.
 
-  run_like(data_name, regexp | data_name);
+  run_like([data_name, regexp | data_name]);
     The "run_like" function is similar to "run_is" except the second
     argument is a regular expression. The regexp can either be a "qr{}"
     object or a data section that has been filtered into a regular
@@ -172,11 +175,19 @@ EXPORTED FUNCTIONS
         run_like 'foo', qr{<html.*};
         run_like 'foo', 'match';
 
-  run_unlike(data_name, regexp | data_name);
+  run_unlike([data_name, regexp | data_name]);
     The "run_unlike" function is similar to "run_like", except the opposite.
 
         run_unlike 'foo', qr{<html.*};
         run_unlike 'foo', 'no_match';
+
+  run_compare(data_name1, data_name2)
+    The "run_compare" function is like the "run_is", "run_is_deeply" and the
+    "run_like" functions all rolled into one. It loops over each relevant
+    block and determines what type of comparison to do.
+
+    NOTE: If you do not specify either a plan, or run any tests, the
+    "run_compare" function will automatically be run.
 
   delimiters($block_delimiter, $data_delimiter)
     Override the default delimiters of "===" and "---".
@@ -557,7 +568,7 @@ OTHER COOL FEATURES
     indeed.
 
 HISTORY
-    This module started its life with the horrible and ridicule invoking
+    This module started its life with the horrible and ridicule inducing
     name "Test::Chunks". It was renamed to "Test::Base" with the hope that
     it would be seen for the very useful module that it has become. If you
     are switching from "Test::Chunks" to "Test::Base", simply substitute the

@@ -1,7 +1,6 @@
-use Test::Base;
+use Test::Base tests => 1;
 use lib 't';
 
-plan tests => 1;
-
 eval "require 'strict-warnings.test'";
-like("$@", qr{\QGlobal symbol "\E.\Qglobal_variable" requires explicit package name\E});
+like "$@",
+   qr{\QGlobal symbol "\E.\Qglobal_variable" requires explicit package name\E};

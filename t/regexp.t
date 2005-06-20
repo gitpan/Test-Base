@@ -1,9 +1,5 @@
 use Test::Base;
 
-plan tests => 1 * blocks;
-
-run_like text => 're';
-
 __DATA__
 ===
 --- text

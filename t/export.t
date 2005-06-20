@@ -1,6 +1,6 @@
 use Test::Base;
 
-plan tests => 38;
+plan tests => 40;
 
 ok(defined &plan);
 ok(defined &ok);
@@ -32,6 +32,8 @@ ok(defined &filters_delay);
 ok(defined &run);
 ok(defined &run_is);
 ok(defined &run_like);
+ok(defined &run_unlike);
+ok(defined &run_compare);
 ok(not defined &diff_is);
 ok(defined &default_object);
 

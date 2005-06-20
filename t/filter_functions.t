@@ -1,11 +1,9 @@
-use Test::Base;
+use Test::Base tests => 2;
 
 filters {
     foo => 'upper',
     bar => 'lower',
 };
-
-plan tests => 2 * blocks;
 
 run_is 'foo', 'upper';
 run_is 'bar', 'lower';

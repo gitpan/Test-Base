@@ -1,15 +1,13 @@
-use Test::Base;
+use Test::Base tests => 4;
 
 filters 'eval';
 
-plan tests => 4;
+my $block = first_block;
 
-my ($block) = blocks;
-
-is(ref($block->hash), 'HASH');
-is(ref($block->array), 'ARRAY');
-is(scalar(@{$block->array}), 11);
-is($block->factorial, '362880');
+is ref($block->hash), 'HASH';
+is ref($block->array), 'ARRAY';
+is scalar(@{$block->array}), 11;
+is $block->factorial, '362880';
 
 __END__
 

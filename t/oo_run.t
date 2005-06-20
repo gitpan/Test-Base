@@ -7,13 +7,13 @@ plan tests => 3 * $blocks->blocks;
 
 $blocks->run(sub {
     my $block = shift;
-    is($block->foo, $block->bar, $block->name);
+    is $block->foo, $block->bar, $block->name;
 });
 
 $blocks->run_is('foo', 'bar');
 $blocks->run_like('foo', qr{x});
 
-sub lower { lc(shift) }
+sub lower { lc }
 
 __DATA__
 %%% Test

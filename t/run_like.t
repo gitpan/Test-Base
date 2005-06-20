@@ -1,6 +1,4 @@
-use Test::Base;
-
-plan tests => 3 * blocks;
+use Test::Base tests => 3;
 
 run_like('html', 're1');
 run_like 'html', 're2';

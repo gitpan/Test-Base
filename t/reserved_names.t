@@ -1,6 +1,4 @@
-use Test::Base;
-
-plan tests => 18;
+use Test::Base tests => 18;
 
 for my $word (qw(
                  BEGIN
@@ -19,7 +17,8 @@ for my $word (qw(
              )) {
     my $blocks = my_blocks($word);
     eval {$blocks->blocks};
-    like($@, qr{'$word' is a reserved name}, "$word is a bad name");
+    like $@, qr{'$word' is a reserved name}, 
+         "$word is a bad name";
 }
 
 for my $word (qw(
@@ -31,7 +30,8 @@ for my $word (qw(
     my $blocks = my_blocks($word);
     my @blocks = $blocks->blocks;
     eval {$blocks->blocks};
-    is("$@", '', "$word is a good name");
+    is "$@", '',
+       "$word is a good name";
 }
 
 sub my_blocks {
@@ -53,4 +53,4 @@ This is a test
 This is a test
 ...
 eval {$blocks->blocks};
-is("$@", '');
+is "$@", '';

@@ -2,7 +2,7 @@ use Test::Base;
 
 plan tests => ~~blocks;
 
-run_is encoded => 'decoded';
+run_is;
 
 __END__
 === Test One

@@ -7,20 +7,18 @@ filters_delay;
 plan tests => 8 * blocks;
 
 for my $block (blocks) {
-    ok(not($block->is_filtered));
-    unlike($block->section, qr/[a-z]/);
-    like($block->section, qr/^I L/);
-    like($block->section, qr/\n/);
+    ok not($block->is_filtered);
+    unlike $block->section, qr/[a-z]/;
+    like $block->section, qr/^I L/;
+    like $block->section, qr/\n/;
     $block->run_filters;
-    ok($block->is_filtered);
-    like($block->section, qr/[a-z]/);
-    like($block->section, qr/^i l/);
-    unlike($block->section, qr/\n/);
+    ok $block->is_filtered;
+    like $block->section, qr/[a-z]/;
+    like $block->section, qr/^i l/;
+    unlike $block->section, qr/\n/;
 }
 
-sub lower {
-    lc(shift);
-}
+sub lower { lc }
 
 __DATA__
 === One
