@@ -1,4 +1,11 @@
 ---
+version: 0.44
+date:    Fri Jul 22 23:38:04 PDT 2005
+changes:
+- Bug fix in is_diff from rking
+- Allow Test::Base to be required without trying to run tests
+- allow ONLY|LAST|SKIP with run_* implicit names.
+---
 version: 0.43
 date:    Sun Jun 19 03:14:40 PDT 2005
 changes:

@@ -1,12 +1,9 @@
 # TODO:
 #
-# * Allow single line data section on same line as name
-# * Allow a filter to be called more than once on a section
-#
 package Test::Base;
 use Spiffy 0.24 -Base;
 use Spiffy ':XXX';
-our $VERSION = '0.43';
+our $VERSION = '0.44';
 
 my @test_more_exports;
 BEGIN {
@@ -63,7 +60,9 @@ sub default_object {
     return $default_object;
 }
 
+my $import_called = 0;
 sub import() {
+    $import_called = 1;
     my $class = (grep /^-base$/i, @_) 
     ? scalar(caller)
     : $_[0];
@@ -230,6 +229,8 @@ sub is($$;$) {
     my ($actual, $expected, $name) = @_;
     local $Test::Builder::Level = $Test::Builder::Level + 1;
     if ($ENV{TEST_SHOW_NO_DIFFS} or
+         not defined $actual or
+         not defined $expected or
          $actual eq $expected or 
          not($self->have_text_diff) or 
          $expected !~ /\n./s
@@ -257,7 +258,9 @@ sub _section_names {
     return @_ if @_ == 2;
     my $block = $self->first_block
       or croak $name_error;
-    my @names = @{$block->{_section_order}[0] || []};
+    my @names = grep {
+        $_ !~ /^(ONLY|LAST|SKIP)$/;
+    } @{$block->{_section_order}[0] || []};
     croak "$name_error. Need two sections in first block"
       unless @names == 2;
     return @names;
@@ -268,7 +271,7 @@ sub _assert_plan {
 }
 
 sub END {
-    run_compare() unless $Have_Plan or $DIED;
+    run_compare() unless $Have_Plan or $DIED or not $import_called;
 }
 
 sub run_compare() {

@@ -63,6 +63,7 @@ t/name.t
 t/next.t
 t/no_plan.t
 t/normalize.t
+t/only-with-implicit.t
 t/only.t
 t/oo.t
 t/oo_run.t
@@ -75,6 +76,7 @@ t/quick_test.t
 t/read_file.t
 t/regexp.t
 t/repeated-filters.t
+t/require.t
 t/reserved_names.t
 t/reverse-deep.t
 t/reverse.t
