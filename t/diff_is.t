@@ -1,8 +1,4 @@
-use Test::Base;
-
-plan eval { require Text::Diff; 1 }
-  ? (tests => 3)
-  : skip_all => 'Requires Test::Diff';
+use Test::Base tests => 3;
 
 filters { 
     test => [qw(exec_perl_stdout smooth_output)],
@@ -25,7 +21,8 @@ is('a b c', 'a b x', 'little diff');
 --- expected
 1..1
 not ok 1 - little diff
-#     Failed test (/tmp/test-blocks-123 at line 3)
+#   Failed test 'little diff'
+#   in /tmp/test-blocks-321 at line 3.
 #          got: 'a b c'
 #     expected: 'a b x'
 # Looks like you failed 1 test of 1.
@@ -56,8 +53,15 @@ not ok 1 - big diff
 #  four
 # +five
 # 
-
-#     Failed test (/tmp/test-blocks-123 at line 3)
+#   Failed test 'big diff
+# @@ -1,4 +1,4 @@
+#  one
+#  two
+# -three
+#  four
+# +five
+# '
+#   in /tmp/test-blocks-321 at line 3.
 # Looks like you failed 1 test of 1.
 
 
@@ -84,6 +88,14 @@ not ok 1 - diff with space
 # +two
 #  three
 # 
-
-#     Failed test (/tmp/test-blocks-123 at line 3)
+#   Failed test 'diff with space
+# @@ -1,3 +1,3 @@
+#  one
+# -two 
+# +two
+#  three
+# '
+#   in /tmp/test-blocks-321 at line 3.
 # Looks like you failed 1 test of 1.
+
+

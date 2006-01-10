@@ -1,0 +1,149 @@
+This file contains message digests of all files listed in MANIFEST,
+signed via the Module::Signature module, version 0.50.
+
+To verify the content in this distribution, first make sure you have
+Module::Signature installed, then type:
+
+    % cpansign -v
+
+It will check each file's integrity, as well as the signature's
+validity.  If "==> Signature verified OK! <==" is not displayed,
+the distribution may already have been compromised, and you should
+not run its Makefile.PL or Build.PL.
+
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
+
+SHA1 80e2243f8968e27e1d14746d7b7dcb2008ca02e9 Changes
+SHA1 6e01daf83c1343105c96f2bc3b369dc53d479d95 MANIFEST
+SHA1 35446fead1c4151eeb5b9161ecd2d8e585f51880 META.yml
+SHA1 b544ce451b5a4ddc2d17c54bcb116f0a24671566 Makefile.PL
+SHA1 a1b02db54a14a94ee0d4fca3e8a88cb67d8736d0 README
+SHA1 242f1c72048fde1d05203896059bfe5d22a1daef ToDo
+SHA1 a96bc090aa5920b2006007badd734a1eb9afae91 inc/Module/Install.pm
+SHA1 2077040a5fcfb6624729dc2379bfeca947829326 inc/Module/Install/Base.pm
+SHA1 8c9e4ae0dd242d4605177b276abd6af74afd78cf inc/Module/Install/Can.pm
+SHA1 e251a9bc02e660e54c1096d1b9bc7e98f7972933 inc/Module/Install/Fetch.pm
+SHA1 535b3e9b56497d8eec53543d463b438e4d24c2e9 inc/Module/Install/Makefile.pm
+SHA1 2c573084d7fff3492b412a37122f82b0a5a9197f inc/Module/Install/Metadata.pm
+SHA1 4fa48c92f8a012c4c3255f70daf37301ef8d312f inc/Module/Install/Win32.pm
+SHA1 8c9ca03883f65745790297e8b21434e7eb479094 inc/Module/Install/WriteAll.pm
+SHA1 720da285970dd392c6f6abb0b77bbced4707e22f lib/Test/Base.pm
+SHA1 e461485388d511cf217e8ffab3cbdc64582c2b26 lib/Test/Base/Filter.pm
+SHA1 324f03eaa16ec2a8b5296fbca030176dff99d9a6 t/BaseTest.pm
+SHA1 72525fa0620a5624e2ba44f1cc4455faf5031308 t/Subclass.pm
+SHA1 76892fa951df2cb51a010730b8febe4e9693bbcc t/Test-Less/index.txt
+SHA1 515888596379fbd14d4d5b1abd3670a849bb6cd3 t/TestA.pm
+SHA1 480fdedd36b8ae52744775ea3b647844ddc303de t/TestB.pm
+SHA1 73dad44516bcadad2cf7ccda81bb86473ee26c6d t/TestBass.pm
+SHA1 35c8cc57932790eb6f945eeeef62d8f2e5ae82f1 t/TestC.pm
+SHA1 f08e4a24808c1c65ae6abafa48ec673876d60e25 t/append.t
+SHA1 c48c62b152dd59dfaebc13fef8f6d2b4e482af38 t/arguments.t
+SHA1 f7547c3058b7048d37b0581d1b585693e48560da t/array.t
+SHA1 fa2baa3e2bb94796df2083778d32caed209281d5 t/autoload.t
+SHA1 2eab3337ecec3e94ccf8202e24cbf8b7e0937bab t/base64.t
+SHA1 75c2e2e3e16b5897f50bc9c4be7b10218fd5c82c t/blocks-scalar.t
+SHA1 ee65aa2c094f31887ea3e7b4a4a77d38488167dd t/blocks_grep.t
+SHA1 b21d28523801e55b8b7588162a5542bfd8a450d6 t/chomp.t
+SHA1 f2a6d17e20f18196b08af2da3e3be45a26b60c2b t/chop.t
+SHA1 cdd53caabc4c5c9eb55567be10341175bfdb33ec t/compact.t
+SHA1 46d0fa0dddbd4e7b68e9247e266f0a82af5eb529 t/compile.t
+SHA1 5e84135887ed38c9d1a437cdb4ae0d8e3fca16db t/delimiters.t
+SHA1 fa03132cc6d7a4318ed906fe5a62b7ae80c8e920 t/description.t
+SHA1 4d4d635313606836c255cd99fe47af573eb6e2e9 t/diff_is.t
+SHA1 8f353d98cf162126d0031cc8dcfa161bbdf3e572 t/dos_spec
+SHA1 fab34ccea769667ac915881c25b4128c59fc284a t/dumper.t
+SHA1 b48108f05bc1ce4380a45cf63c165272a6500091 t/embed_perl.t
+SHA1 e17f7b9875f93dae5057ed66519ab4c96541429f t/escape.t
+SHA1 d5b2bde7aabb2b879ff1bb57fe5de80710fd93dc t/eval.t
+SHA1 896ccab5378860642c8fa224c654941295bdedd9 t/eval_all.t
+SHA1 85f16c7c238aab26c1da3aea9bbe9ed1dbf49ae1 t/eval_stderr.t
+SHA1 0e3b9bf9ae11efe69f6f0723902436b0b3983a5f t/eval_stdout.t
+SHA1 426faf5f84879aa9c3df28d89e27078477337c84 t/export.t
+SHA1 f1fa12f49c7c3bae09594595804a5fa2623895b3 t/filter_arguments.t
+SHA1 7a1fc75666a1954ced827f2c1ec26a5df29e4f7d t/filter_delay.t
+SHA1 b2a80f0617e99c355827e84f7ccaebbfb8fd31d5 t/filter_functions.t
+SHA1 99fd7bb105c847a19dc379362079c19cac8a8ac8 t/filters-append.t
+SHA1 06ea79cedfdc978cd2a2f337a9cadf4e9f9be89c t/filters.t
+SHA1 7d1ec23c31e6e619325d487b895f00ec7a2d4aed t/filters_map.t
+SHA1 b93f6243e147e347a245392b66e26c62c309cf1b t/first_block.t
+SHA1 1d5ffda10e0b30d9cd6f5639bc5c069d0b888d31 t/flatten.t
+SHA1 9e701606d9d93dca413de56afcc024e6d7f7d2c4 t/get_url.t
+SHA1 05829510ba5471ae7e33ed25bf4f63393a3b80a4 t/hash.t
+SHA1 80ee30e8155ce0d5d9e68e7100810b8fe3527d1c t/head.t
+SHA1 fd724117df44dacca094cbbe8fb25beea14c7db5 t/internals.t
+SHA1 0119a04bcd581446ad186fadb9325f945ff9d203 t/is.t
+SHA1 cf695768ccca58a6f50cddf08e8e478047160cac t/jit-run.t
+SHA1 0690aecfb7a9bdb33d33d0e762855604be2f3dd5 t/join-deep.t
+SHA1 82ac6845280ca67a49ccf0995d7682695b3bf5f3 t/join.t
+SHA1 981784f7d55eb406a69def2fef2e462fe88b00eb t/last.t
+SHA1 eeb32e6e9bce3bc74b29cce2c1081d0a6850b6fa t/late.t
+SHA1 b6ce32f7c5093717d3aa075e61261bf7ff779c47 t/lazy-filters.t
+SHA1 17a92d9857f2662f42fa0cb991142138bab0b13d t/lines.t
+SHA1 b1b6e7bc0d5e43aa7beaed32e0dfd717efc8efba t/list.t
+SHA1 37d3d767ccd523c1cdd96305e07f59ee04b2b14b t/main_filters.t
+SHA1 9e4775f72f2dc0cc9901894b58d1806b34bff036 t/multi-level-inherit.t
+SHA1 d598107be2d09f4d769dd9e2ec6b6090bc6bfabb t/name.t
+SHA1 94ed41ad61feb8d919221b8ff6fdf30ca1334d99 t/next.t
+SHA1 227bd144eaab4a0d0217c4a7b7854d94d771c3e1 t/no_diff.t
+SHA1 641b09c642d186c63aca1ffc1ebce005b46a6823 t/no_plan.t
+SHA1 760515c80d8c9ebb88ca66191c0818cc6b10fafc t/normalize.t
+SHA1 432d366a3e23caf01acd348610c4acd0ca5318d8 t/only-with-implicit.t
+SHA1 fc7fe651b94475ea8c763a70d8df6d4c923ceef5 t/only.t
+SHA1 c488717f708f9221e5e183d31f3b8167ad838516 t/oo.t
+SHA1 4b5f2ef652b5c8974d9f71a37d8c5dcfa2ea129b t/oo_run.t
+SHA1 0124ce50e4e69d19322d1eb45ac24592fd70b2cd t/parentheses.t
+SHA1 082086ee70cb638ea2ca4110f830c44af4d489a7 t/prepend.t
+SHA1 922230b7c8337df386235e5b9094cddffb6dabc1 t/preserve-order.t
+SHA1 2ae5991efd88302d99dc7fe446d459636b473dc8 t/prototypes.t
+SHA1 a6f290d34585391bc807babe8ba23a5456d1b3ff t/quick-plan.t
+SHA1 c65cb3eee68d92c36652d2488614f8fecd166998 t/quick_test.t
+SHA1 3e258ff32497fbbeedc7efae161444a3c772424f t/read_file.t
+SHA1 70ad31dac92cb9cc77164e3074fd886a8a88785e t/regexp.t
+SHA1 78032457e9157ba4f39f3aa2e5c1e958e54338f8 t/repeated-filters.t
+SHA1 f0e27d5b7dcb89f6617331f31b76f45864bcf35b t/require.t
+SHA1 6212dcfd45174a58d9cf02d90ed2c30db9940e59 t/reserved_names.t
+SHA1 85ea1d11ee2b3d70cc05b9566a17f28873fd2fba t/reverse-deep.t
+SHA1 d66457f5d1739574cea6319f02c0b961a811b44b t/reverse.t
+SHA1 3d27a94e2ec9c87c381771805ab65e1622b1d2c2 t/run-args.t
+SHA1 286a9337862baed597a299c4ca22314d0c4badb6 t/run_compare.t
+SHA1 b6b3125f856bd8ab4c5892ab095cc00a73bd2641 t/run_is.t
+SHA1 b94bec5d68abf0b9c1258ead01061fcd059a0caa t/run_is_deeply.t
+SHA1 6a3d59e970d6aec668957f5dda57539c45de59ec t/run_like.t
+SHA1 0cd9ed2ecdd7f89a160ee6915c4743f1150ae63c t/run_unlike.t
+SHA1 6459cb2da78c9ee3e080c4eeb594dcd7498f51dd t/sample-file.txt
+SHA1 78e4adf7ae1d94d6fbf2a62728e9b55490a0b26f t/simple.t
+SHA1 d81f43f9b337b163140101804f8e4b0920f4636c t/skip.t
+SHA1 d74fb29194776035dc434b77894ce66bab43132e t/slice.t
+SHA1 e8190e76aa66d77b57e9e65c8b646efaa72eb651 t/sort-deep.t
+SHA1 1698f6e1bef0ac8009e9238e975aade2cee3b208 t/sort.t
+SHA1 5d71af54c9ce704af52467f4af4b2807c121a7ca t/spec1
+SHA1 da956194f9a37b10f1a3cdefa09f1f01634d86aa t/spec2
+SHA1 7e2349a1b4742f0203d74421356fa534c437957e t/spec_file.t
+SHA1 ce1d24398cfa523bd3ad9056c3f96f511a2c9aeb t/spec_string.t
+SHA1 ac545ec13bcef2a817fbc8657050f43c9242d719 t/split-deep.t
+SHA1 4ac5ad895c83c706e11cfb678c046ae4e4138a38 t/split-regexp.t
+SHA1 05bb46cd15d133eb67d4d145b9fc7d72609ec327 t/split.t
+SHA1 2bb0ad415fbd179377a0c23a33ff6996320396bb t/strict-warnings.t
+SHA1 b9e954a6569d7dda0ffcf2dbff35922b3bb9aa45 t/strict-warnings.test
+SHA1 baf178dae1c45daf29c5bb4949cae7840fe9fc22 t/strict.t
+SHA1 d5dae554a931b6b2a5b54a67046dd53733055eb1 t/subclass-autoclass.t
+SHA1 409ab4a541d3daa44ed4ccb480d3d2978c5daab4 t/subclass-import.t
+SHA1 9a4fb6ed76a7092f6bfd7dc0997d88bf5498d3f1 t/subclass.t
+SHA1 747edbb09289ce0454fe0a4da5a211af8f2fb941 t/subclass_late.t
+SHA1 062664b90c2868b9b894bcce8d5cac107e63decf t/tail.t
+SHA1 73a7068e35714b291040af54b36d175368ccb025 t/tie_output.t
+SHA1 f1026404b4f9b4578533a04bdeef3e9a349d1c94 t/trim.t
+SHA1 16d26129760aee4bc0c80e289f408a4fc7f3f08f t/unchomp.t
+SHA1 2fd96c55651d95870270a42a49ed810ceba371ea t/use-test-more.t
+SHA1 378e8c2440bd3736f61b80aa841069b2a5944933 t/write_file.t
+SHA1 e050676b4a5e759818866c9c96248ce3d0bece10 t/xxx.t
+SHA1 8c107095e8a6c057bcd798258a489d5d1ee062a8 t/yaml.t
+SHA1 d725ced2d735160c2a97cb2019865bf7c67f1a6a t/zero-blocks.t
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.1 (Darwin)
+
+iD8DBQFDw0HAjB6MiGOYt0gRAkJcAJ9Z/BmlD6iVOulCi7SDJEDvxfOyMwCcC6Mq
+MEupK/kmLOTOrVGl45VbvAg=
+=1VLa
+-----END PGP SIGNATURE-----

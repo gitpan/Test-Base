@@ -3,7 +3,7 @@
 package Test::Base;
 use Spiffy 0.24 -Base;
 use Spiffy ':XXX';
-our $VERSION = '0.44';
+our $VERSION = '0.45';
 
 my @test_more_exports;
 BEGIN {
@@ -19,7 +19,7 @@ use Test::More import => \@test_more_exports;
 use Carp;
 
 our @EXPORT = (@test_more_exports, qw(
-    is
+    is no_diff
 
     blocks next_block first_block
     delimiters spec_file spec_string 
@@ -69,10 +69,10 @@ sub import() {
     if (not defined $default_class) {
         $default_class = $class;
     }
-    else {
-        croak "Can't use $class after using $default_class"
-          unless $default_class->isa($class);
-    }
+#     else {
+#         croak "Can't use $class after using $default_class"
+#           unless $default_class->isa($class);
+#     }
 
     if (@_ > 1 and not grep /^-base$/i, @_) {
         my @args = @_;
@@ -489,6 +489,10 @@ sub tie_output() {
     tie $handle, 'Test::Base::Handle', $_[0];
 }
 
+sub no_diff {
+    $ENV{TEST_SHOW_NO_DIFFS} = 1;
+}
+
 package Test::Base::Handle;
 
 sub TIEHANDLE() {
@@ -721,8 +725,8 @@ is different in hundreds of lines of output!
 Diff output requires the optional C<Text::Diff> CPAN module. If you
 don't have this module, the C<is()> function will simply give you normal
 Test::More output. To disable diffing altogether, set the
-C<TEST_SHOW_NO_DIFFS> environment variable (or
-C<$ENV{TEST_SHOW_NO_DIFFS}>) to a true value.
+C<TEST_SHOW_NO_DIFFS> environment variable (or C<$ENV{TEST_SHOW_NO_DIFFS}>)
+to a true value. You can also call the C<no_diff> function as a shortcut.
 
 =head2 blocks( [data-section-name] )
 
@@ -900,6 +904,10 @@ You can capture STDOUT and STDERR for operations with this function:
     print "Che!\n";
     untie *STDOUT;
     is($out, "Hey!\nChe!\n");
+
+=head2 no_diff()
+
+Turn off diff support for is() in a test file.
 
 =head2 default_object()
 
@@ -1239,10 +1247,11 @@ substitute the concept and usage of C<chunks> to C<blocks>.
 
 =head1 AUTHOR
 
-Brian Ingerson <ingy@cpan.org>
+Ingy döt Net <ingy@cpan.org>
 
 =head1 COPYRIGHT
 
+Copyright (c) 2006. Ingy döt Net. All rights reserved.
 Copyright (c) 2005. Brian Ingerson. All rights reserved.
 
 This program is free software; you can redistribute it and/or modify it

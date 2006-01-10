@@ -1,0 +1,10 @@
+== 0.45 release
+
+- add no_diff
+- allow multiple levels of module inheritance
+- allow coment area after the description
+- update module dependencies
+
+
+== future release
+- allow other markups (like perl) for data driven stuff

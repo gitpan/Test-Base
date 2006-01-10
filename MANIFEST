@@ -59,8 +59,10 @@ t/lazy-filters.t
 t/lines.t
 t/list.t
 t/main_filters.t
+t/multi-level-inherit.t
 t/name.t
 t/next.t
+t/no_diff.t
 t/no_plan.t
 t/normalize.t
 t/only-with-implicit.t
@@ -109,7 +111,10 @@ t/subclass.t
 t/subclass_late.t
 t/tail.t
 t/Test-Less/index.txt
+t/TestA.pm
+t/TestB.pm
 t/TestBass.pm
+t/TestC.pm
 t/tie_output.t
 t/trim.t
 t/unchomp.t
@@ -118,3 +123,5 @@ t/write_file.t
 t/xxx.t
 t/yaml.t
 t/zero-blocks.t
+ToDo
+SIGNATURE                                Public-key signature (added by MakeMaker)

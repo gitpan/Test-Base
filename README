@@ -96,7 +96,7 @@ EXPORTED FUNCTIONS
     have this module, the "is()" function will simply give you normal
     Test::More output. To disable diffing altogether, set the
     "TEST_SHOW_NO_DIFFS" environment variable (or $ENV{TEST_SHOW_NO_DIFFS})
-    to a true value.
+    to a true value. You can also call the "no_diff" function as a shortcut.
 
   blocks( [data-section-name] )
     The most important function is "blocks". In list context it returns a
@@ -259,6 +259,9 @@ EXPORTED FUNCTIONS
         print "Che!\n";
         untie *STDOUT;
         is($out, "Hey!\nChe!\n");
+
+  no_diff()
+    Turn off diff support for is() in a test file.
 
   default_object()
     Returns the default Test::Base object. This is useful if you feel the
@@ -575,10 +578,11 @@ HISTORY
     concept and usage of "chunks" to "blocks".
 
 AUTHOR
-    Brian Ingerson <ingy@cpan.org>
+    Ingy döt Net <ingy@cpan.org>
 
 COPYRIGHT
-    Copyright (c) 2005. Brian Ingerson. All rights reserved.
+    Copyright (c) 2006. Ingy döt Net. All rights reserved. Copyright (c)
+    2005. Brian Ingerson. All rights reserved.
 
     This program is free software; you can redistribute it and/or modify it
     under the same terms as Perl itself.
