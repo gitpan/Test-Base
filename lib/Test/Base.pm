@@ -1,9 +1,10 @@
 # TODO:
 #
 package Test::Base;
-use Spiffy 0.24 -Base;
+use 5.006001;
+use Spiffy 0.26 -Base;
 use Spiffy ':XXX';
-our $VERSION = '0.45';
+our $VERSION = '0.46';
 
 my @test_more_exports;
 BEGIN {
@@ -221,7 +222,9 @@ sub filter_arguments() {
 }
 
 sub have_text_diff {
-    eval { require Text::Diff; 1 };
+    eval { require Text::Diff; 1 } &&
+        $Text::Diff::VERSION >= 0.35 &&
+        $Algorithm::Diff::VERSION >= 1.15;
 }
 
 sub is($$;$) {

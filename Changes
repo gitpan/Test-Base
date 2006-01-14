@@ -1,4 +1,10 @@
 ---
+version: 0.46
+date:    Sat Jan 14 05:46:31 PST 2006
+changes:
+- Don't sign the distribution tarball
+- Don't require the diffing stuff
+---
 version: 0.45
 date:    Mon Jan  9 20:58:04 PST 2006
 changes:

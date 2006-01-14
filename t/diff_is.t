@@ -1,15 +1,21 @@
 use Test::Base tests => 3;
 
-filters { 
-    test => [qw(exec_perl_stdout smooth_output)],
-    expected => 'smooth_output',
-};
-run_is;
+SKIP: {
+    unless (Test::Base->have_text_diff) {
+        skip 'The autodiffing feature of Test::Base (which rocketh) requires Text-Diff-0.35 and Algorithm-Diff-1.15 (or greater).', 3;
+    }
 
-sub smooth_output { 
-    s/test-blocks-\d+/test-blocks-321/;
-    s/at line \d+\)/at line 000)/;
-    s/^\n//gm;
+    filters { 
+        test => [qw(exec_perl_stdout smooth_output)],
+        expected => 'smooth_output',
+    };
+    run_is;
+
+    sub smooth_output { 
+        s/test-blocks-\d+/test-blocks-321/;
+        s/at line \d+\)/at line 000)/;
+        s/^\n//gm;
+    }
 }
 
 __DATA__
