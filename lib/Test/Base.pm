@@ -2,9 +2,9 @@
 #
 package Test::Base;
 use 5.006001;
-use Spiffy 0.26 -Base;
+use Spiffy 0.29 -Base;
 use Spiffy ':XXX';
-our $VERSION = '0.46';
+our $VERSION = '0.47';
 
 my @test_more_exports;
 BEGIN {
