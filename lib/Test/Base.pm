@@ -4,7 +4,7 @@ package Test::Base;
 use 5.006001;
 use Spiffy 0.29 -Base;
 use Spiffy ':XXX';
-our $VERSION = '0.47';
+our $VERSION = '0.48';
 
 my @test_more_exports;
 BEGIN {
@@ -655,11 +655,15 @@ A sample test:
     plan tests => 1 * blocks;
     
     run_is input => 'expected';
+
+    sub local_filter {
+        s/my/your/;
+    }
     
     __END__
     
     === Test one (the name of the test)
-    --- input my_filter
+    --- input my_filter local_filter
     my
     input
     lines

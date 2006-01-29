@@ -7,7 +7,11 @@ plan eval { require YAML; 1 }
 my ($block) = blocks;
 
 eval { XXX($block->text) };
-is $@, $block->xxx, $block->name;
+
+my $error = "$@";
+$error =~ s/\\/\//g;
+
+is $error, $block->xxx, $block->name;
 
 __DATA__
 === XXX Test
