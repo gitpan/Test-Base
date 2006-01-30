@@ -2,9 +2,9 @@
 #
 package Test::Base;
 use 5.006001;
-use Spiffy 0.29 -Base;
+use Spiffy 0.30 -Base;
 use Spiffy ':XXX';
-our $VERSION = '0.48';
+our $VERSION = '0.50';
 
 my @test_more_exports;
 BEGIN {
@@ -1234,9 +1234,29 @@ Test::Base. That happens automatically, due to the powers of Spiffy.
 The first line in C<some_func> allows it to be called as either a
 function or a method in the test code.
 
+=head1 DISTRIBUTION SUPPORT
+
+You might be thinking that you do not want to use Test::Base in you
+modules, because it adds an installation dependency. Fear not.
+Module::Build takes care of that.
+
+Just write a Makefile.PL that looks something like this:
+
+    use inc::Module::Install;
+
+    name            'Foo';
+    all_from        'lib/Foo.pm';
+
+    use_test_base;
+
+    WriteAll;
+
+The line with C<use_test_base> will automatically bundle all the code
+the user needs to run Test::Base based tests.
+
 =head1 OTHER COOL FEATURES
 
-Test::Base automatically adds
+Test::Base automatically adds:
 
     use strict;
     use warnings;
