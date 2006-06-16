@@ -1,4 +1,10 @@
 ---
+version: 0.51
+date:    Fri Jun 16 13:05:22 PDT 2006
+changes:
+- Remove build-requires dep of Spiffy for Module::Install::TestBase
+- Add in a patch from the good folk at Socialtext.
+---
 version: 0.50
 date:    Mon Jan 30 10:52:52 PST 2006
 changes:

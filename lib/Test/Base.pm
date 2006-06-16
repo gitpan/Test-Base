@@ -4,7 +4,7 @@ package Test::Base;
 use 5.006001;
 use Spiffy 0.30 -Base;
 use Spiffy ':XXX';
-our $VERSION = '0.50';
+our $VERSION = '0.51';
 
 my @test_more_exports;
 BEGIN {
@@ -16,6 +16,7 @@ BEGIN {
         $TODO
     );
 }
+
 use Test::More import => \@test_more_exports;
 use Carp;
 
@@ -75,11 +76,18 @@ sub import() {
 #           unless $default_class->isa($class);
 #     }
 
-    if (@_ > 1 and not grep /^-base$/i, @_) {
-        my @args = @_;
-        shift @args;
-        Test::More->import(import => \@test_more_exports, @args);
-    }
+    unless (grep /^-base$/i, @_) {
+        my @args;
+        for (my $ii = 1; $ii <= $#_; ++$ii) {
+            if ($_[$ii] eq '-package') {
+                ++$ii;
+            } else {
+                push @args, $_[$ii];
+            }
+        }
+        Test::More->import(import => \@test_more_exports, @args)
+            if @args;
+     }
     
     _strict_warnings();
     goto &Spiffy::import;
