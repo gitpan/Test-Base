@@ -4,7 +4,7 @@ package Test::Base;
 use 5.006001;
 use Spiffy 0.30 -Base;
 use Spiffy ':XXX';
-our $VERSION = '0.51';
+our $VERSION = '0.52';
 
 my @test_more_exports;
 BEGIN {
@@ -13,6 +13,7 @@ BEGIN {
         skip todo_skip pass fail
         eq_array eq_hash eq_set
         plan can_ok isa_ok diag
+        use_ok
         $TODO
     );
 }

@@ -1,6 +1,6 @@
 use Test::Base;
 
-plan tests => 40;
+plan tests => 41;
 
 ok(defined &plan);
 ok(defined &ok);
@@ -20,6 +20,7 @@ ok(defined &eq_set);
 ok(defined &can_ok);
 ok(defined &isa_ok);
 ok(defined &diag);
+ok(defined &use_ok);
 
 ok(defined &blocks);
 ok(defined &next_block);
