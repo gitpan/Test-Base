@@ -7,6 +7,7 @@ sub test {
     my $num = shift;
     chomp $num;
     is $num, ++$count;
+    return;
 }
 
 __END__

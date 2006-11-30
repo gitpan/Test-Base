@@ -1,5 +1,5 @@
 use Test::Base tests => 1;
-
+no_diag_on_only;
 run_is;
 
 __END__

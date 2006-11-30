@@ -1,5 +1,5 @@
 use Test::Base tests => 3;
-
+no_diag_on_only;
 run { pass };
 
 is scalar(blocks), 1;

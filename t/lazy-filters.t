@@ -1,5 +1,5 @@
 use Test::Base tests => 2;
-
+no_diag_on_only;
 sub shouldnt_be_run {
     fail "shouldnt_be_run was run";
 }

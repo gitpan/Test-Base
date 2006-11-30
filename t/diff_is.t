@@ -18,6 +18,7 @@ SKIP: {
     sub smooth_output { 
         s/test-blocks-\d+/test-blocks-321/;
         s/at line \d+\)/at line 000)/;
+        s/in (.*) at line (\d+)/at $1 line $2/; # for Test::Simple 0.65
         s/^\n//gm;
     }
 }

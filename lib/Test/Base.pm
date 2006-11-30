@@ -4,7 +4,7 @@ package Test::Base;
 use 5.006001;
 use Spiffy 0.30 -Base;
 use Spiffy ':XXX';
-our $VERSION = '0.52';
+our $VERSION = '0.53';
 
 my @test_more_exports;
 BEGIN {
@@ -29,7 +29,7 @@ our @EXPORT = (@test_more_exports, qw(
     filters filters_delay filter_arguments
     run run_compare run_is run_is_deeply run_like run_unlike 
     WWW XXX YYY ZZZ
-    tie_output
+    tie_output no_diag_on_only
 
     find_my_self default_object
 
@@ -50,6 +50,7 @@ field block_delim =>
 field data_delim =>
       -init => '$self->data_delim_default';
 field _filters_delay => 0;
+field _no_diag_on_only => 0;
 
 field block_delim_default => '===';
 field data_delim_default => '---';
@@ -187,6 +188,11 @@ sub first_block() {
 sub filters_delay() {
     (my ($self), @_) = find_my_self(@_);
     $self->_filters_delay(defined $_[0] ? shift : 1);
+}
+
+sub no_diag_on_only() {
+    (my ($self), @_) = find_my_self(@_);
+    $self->_no_diag_on_only(defined $_[0] ? shift : 1);
 }
 
 sub delimiters() {
@@ -393,6 +399,8 @@ sub _choose_blocks {
     for my $hunk (@_) {
         my $block = $self->_make_block($hunk);
         if (exists $block->{ONLY}) {
+            diag "I found ONLY: maybe you're debugging?"
+                unless $self->_no_diag_on_only;
             return [$block];
         }
         next if exists $block->{SKIP};
@@ -576,11 +584,15 @@ sub run_filters {
             my $function = "main::$filter";
             no strict 'refs';
             if (defined &$function) {
-                $_ = join '', @value;
+                local $_ = join '', @value;
+                my $old = $_;
                 @value = &$function(@value);
                 if (not(@value) or 
                     @value == 1 and $value[0] =~ /\A(\d+|)\z/
                 ) {
+                    if ($value[0] && $_ eq $old) {
+                        Test::Base::diag("Filters returning numbers are supposed to do munging \$_: your filter '$function' apparently doesn't.");
+                    }
                     @value = ($_);
                 }
             }
@@ -1029,6 +1041,12 @@ A block with an ONLY section causes only that block to be used. This is
 useful when you are concentrating on getting a single test to pass. If
 there is more than one block with ONLY, the first one will be chosen.
 
+Because ONLY is very useful for debugging and sometimes you forgot to
+remove the ONLY flag before commiting to the VCS or uploading to CPAN,
+Test::Base by default gives you a diag message saying I<I found ONLY
+... maybe you're debugging?>. If you don't like it, use
+C<no_diag_on_only>.
+
 A block with a LAST section makes that block the last one in the
 specification. All following blocks will be ignored.
 
@@ -1106,7 +1124,7 @@ Data accessor methods for blocks will return a list of values when used
 in list context, and the first element of the list in scalar context.
 This is usually "the right thing", but be aware.
 
-head2 The Stock Filters
+=head2 The Stock Filters
 
 Test::Base comes with large set of stock filters. They are in the
 C<Test::Base::Filter> module. See L<Test::Base::Filter> for a listing and
@@ -1133,7 +1151,7 @@ Here is a self explanatory example:
     sub Test::Base::Filter::bar {
         my $self = shift;       # The Test::Base::Filter object
         my $data = shift;
-        my $args = $self->arguments;
+        my $args = $self->current_arguments;
         my $current_block_object = $self->block;
         # transform $data in a barish manner
         return $data;
@@ -1144,6 +1162,18 @@ internals by calling the C<block> method on the filter object.
 
 Normally you'll probably just use the functional interface, although all
 the builtin filters are methods.
+
+Note that filters defined in the C<main> namespace can look like:
+
+  sub filter9 {
+      s/foo/bar/;
+  }
+
+since Test::Base automatically munges the input string into $_
+variable and checks the return value of the function to see if it
+looks like a number. If you must define a filter that returns just a
+single number, do it in a different namespace as a method. These
+filters don't allow the simplistic $_ munging.
 
 =head1 OO
 
@@ -1247,7 +1277,7 @@ function or a method in the test code.
 
 You might be thinking that you do not want to use Test::Base in you
 modules, because it adds an installation dependency. Fear not.
-Module::Build takes care of that.
+Module::Install takes care of that.
 
 Just write a Makefile.PL that looks something like this:
 

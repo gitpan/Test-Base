@@ -1,9 +1,10 @@
-use Test::Base tests => 5;
+use Test::Base tests => 6;
 
 is next_block->xxx, "I lmike mike\n";
 is next_block->xxx, "I like mikey";
 is next_block->xxx, "123\n";
 is next_block->xxx, "I like MIKEY";
+is next_block->xxx, "I like ike\n";
 
 run_is xxx => 'yyy';
 
@@ -24,7 +25,11 @@ sub mike3 {
 sub mike4 {
     $_ = 'I like MIKEY';
     return;
-};
+}
+
+sub mike5 {
+    return 200;
+}
 
 sub yyy { s/x/y/g }
 
@@ -43,6 +48,10 @@ I like ike
 
 ===
 --- xxx mike4
+I like ike
+
+===
+--- xxx mike5
 I like ike
 
 ===

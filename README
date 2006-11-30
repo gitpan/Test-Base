@@ -367,6 +367,11 @@ TEST SPECIFICATION
     useful when you are concentrating on getting a single test to pass. If
     there is more than one block with ONLY, the first one will be chosen.
 
+    Because ONLY is very useful for debugging and sometimes you forgot to
+    remove the ONLY flag before commiting to the VCS or uploading to CPAN,
+    Test::Base by default gives you a diag message saying *I found ONLY ...
+    maybe you're debugging?*. If you don't like it, use "no_diag_on_only".
+
     A block with a LAST section makes that block the last one in the
     specification. All following blocks will be ignored.
 
@@ -439,8 +444,7 @@ FILTERS
     in list context, and the first element of the list in scalar context.
     This is usually "the right thing", but be aware.
 
-    head2 The Stock Filters
-
+  The Stock Filters
     Test::Base comes with large set of stock filters. They are in the
     "Test::Base::Filter" module. See Test::Base::Filter for a listing and
     description of these filters.
@@ -465,7 +469,7 @@ FILTERS
         sub Test::Base::Filter::bar {
             my $self = shift;       # The Test::Base::Filter object
             my $data = shift;
-            my $args = $self->arguments;
+            my $args = $self->current_arguments;
             my $current_block_object = $self->block;
             # transform $data in a barish manner
             return $data;
@@ -476,6 +480,18 @@ FILTERS
 
     Normally you'll probably just use the functional interface, although all
     the builtin filters are methods.
+
+    Note that filters defined in the "main" namespace can look like:
+
+      sub filter9 {
+          s/foo/bar/;
+      }
+
+    since Test::Base automatically munges the input string into $_ variable
+    and checks the return value of the function to see if it looks like a
+    number. If you must define a filter that returns just a single number,
+    do it in a different namespace as a method. These filters don't allow
+    the simplistic $_ munging.
 
 OO
     Test::Base has a nice functional interface for simple usage. Under the
@@ -568,7 +584,7 @@ SUBCLASSING
 DISTRIBUTION SUPPORT
     You might be thinking that you do not want to use Test::Base in you
     modules, because it adds an installation dependency. Fear not.
-    Module::Build takes care of that.
+    Module::Install takes care of that.
 
     Just write a Makefile.PL that looks something like this:
 
