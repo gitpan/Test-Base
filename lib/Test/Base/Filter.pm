@@ -213,7 +213,8 @@ sub lines {
 
 sub norm {
     $self->assert_scalar(@_);
-    my $text = shift || '';
+    my $text = shift;
+    $text = '' unless defined $text;
     $text =~ s/\015\012/\n/g;
     $text =~ s/\r/\n/g;
     return $text;
