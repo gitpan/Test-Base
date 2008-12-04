@@ -11,16 +11,19 @@ BEGIN {
 }
 
 sub use_test_base {
-    my $self = shift; 
+    my $self = shift;
     $self->include('Test::Base');
     $self->include('Test::Base::Filter');
     $self->include('Spiffy');
     $self->include('Test::More');
     $self->include('Test::Builder');
     $self->include('Test::Builder::Module');
+    $self->requires('Filter::Util::Call');
 }
 
 1;
+
+=encoding utf8
 
 =head1 NAME
 
@@ -57,7 +60,7 @@ Ingy döt Net <ingy@cpan.org>
 
 =head1 COPYRIGHT
 
-Copyright (c) 2006. Ingy döt Net. All rights reserved.
+Copyright (c) 2006, 2008. Ingy döt Net.
 
 This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.

@@ -11,3 +11,4 @@ requires    Filter::Util::Call => '0';
 clean_files 't/output';
 
 WriteAll;
+
