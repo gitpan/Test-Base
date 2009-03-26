@@ -124,6 +124,7 @@ t/TestC.pm
 t/tie_output.t
 t/trim.t
 t/unchomp.t
+t/undef.t
 t/use-test-more.t
 t/write_file.t
 t/xxx.t
