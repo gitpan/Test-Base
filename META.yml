@@ -2,28 +2,23 @@
 abstract: 'A Data Driven Testing Framework'
 author:
   - 'Ingy döt Net <ingy@cpan.org>'
-build_requires:
-  ExtUtils::MakeMaker: 6.42
+build_requires: {}
 configure_requires:
-  ExtUtils::MakeMaker: 6.42
-distribution_type: module
-generated_by: 'Module::Install version 1.00'
+  ExtUtils::MakeMaker: '6.30'
+dynamic_config: 0
+generated_by: 'Dist::Zilla version 5.012, CPAN::Meta::Converter version 2.132830'
 license: perl
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
-  version: 1.4
+  version: '1.4'
 name: Test-Base
-no_index:
-  directory:
-    - inc
-    - t
 recommends:
-  Test::Deep: 0
+  Test::Deep: '0'
 requires:
-  Filter::Util::Call: 0
-  Spiffy: 0.30
-  Test::More: 0.62
-  perl: 5.6.1
+  Spiffy: '0.30'
+  perl: v5.8.1
 resources:
-  license: http://dev.perl.org/licenses/
-version: 0.60
+  bugtracker: https://github.com/ingydotnet/test-base-pm/issues
+  homepage: https://github.com/ingydotnet/test-base-pm
+  repository: https://github.com/ingydotnet/test-base-pm.git
+version: '0.61'
