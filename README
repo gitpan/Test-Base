@@ -7,9 +7,9 @@ SYNOPSIS
         # lib/MyProject/Test.pm
         package MyProject::Test;
         use Test::Base -Base;
-    
+
         use MyProject;
-    
+
         package MyProject::Test::Filter;
         use Test::Base::Filter -base;
 
@@ -21,17 +21,17 @@ SYNOPSIS
 
         # t/sample.t
         use MyProject::Test;
-    
+
         plan tests => 1 * blocks;
-    
+
         run_is input => 'expected';
 
         sub local_filter {
             s/my/your/;
         }
-    
+
         __END__
-    
+
         === Test one (the name of the test)
         --- input my_filter local_filter
         my
@@ -40,7 +40,7 @@ SYNOPSIS
         --- expected
         expected
         output
-    
+
         === Test two
         This is an optional description
         of this particular test.
@@ -89,208 +89,211 @@ EXPORTED FUNCTIONS
     can basically write your tests the same as Test::More. Test::Base also
     exports many functions of its own:
 
-  is(actual, expected, [test-name])
-    This is the equivalent of Test::More's "is" function with one
-    interesting twist. If your actual and expected results differ and the
-    output is multi-line, this function will show you a unified diff format
-    of output. Consider the benefit when looking for the one character that
-    is different in hundreds of lines of output!
+    "is(actual, expected, [test-name])"
+        This is the equivalent of Test::More's "is" function with one
+        interesting twist. If your actual and expected results differ and
+        the output is multi- line, this function will show you a unified
+        diff format of output. Consider the benefit when looking for the one
+        character that is different in hundreds of lines of output!
 
-    Diff output requires the optional "Text::Diff" CPAN module. If you don't
-    have this module, the "is()" function will simply give you normal
-    Test::More output. To disable diffing altogether, set the
-    "TEST_SHOW_NO_DIFFS" environment variable (or $ENV{TEST_SHOW_NO_DIFFS})
-    to a true value. You can also call the "no_diff" function as a shortcut.
+        Diff output requires the optional "Text::Diff" CPAN module. If you
+        don't have this module, the "is()" function will simply give you
+        normal Test::More output. To disable diffing altogether, set the
+        "TEST_SHOW_NO_DIFFS" environment variable (or
+        $ENV{TEST_SHOW_NO_DIFFS}) to a true value. You can also call the
+        "no_diff" function as a shortcut.
 
-  blocks( [data-section-name] )
-    The most important function is "blocks". In list context it returns a
-    list of "Test::Base::Block" objects that are generated from the test
-    specification in the "DATA" section of your test file. In scalar context
-    it returns the number of objects. This is useful to calculate your
-    Test::More plan.
+    "blocks( [data-section-name] )"
+        The most important function is "blocks". In list context it returns
+        a list of "Test::Base::Block" objects that are generated from the
+        test specification in the "DATA" section of your test file. In
+        scalar context it returns the number of objects. This is useful to
+        calculate your Test::More plan.
 
-    Each Test::Base::Block object has methods that correspond to the names
-    of that object's data sections. There is also a "name" and a
-    "description" method for accessing those parts of the block if they were
-    specified.
+        Each Test::Base::Block object has methods that correspond to the
+        names of that object's data sections. There is also a "name" and a
+        "description" method for accessing those parts of the block if they
+        were specified.
 
-    The "blocks" function can take an optional single argument, that
-    indicates to only return the blocks that contain a particular named data
-    section. Otherwise "blocks" returns all blocks.
+        The "blocks" function can take an optional single argument, that
+        indicates to only return the blocks that contain a particular named
+        data section. Otherwise "blocks" returns all blocks.
 
-        my @all_of_my_blocks = blocks;
+            my @all_of_my_blocks = blocks;
 
-        my @just_the_foo_blocks = blocks('foo');
+            my @just_the_foo_blocks = blocks('foo');
 
-  next_block()
-    You can use the next_block function to iterate over all the blocks.
+    "next_block()"
+        You can use the next_block function to iterate over all the blocks.
 
-        while (my $block = next_block) {
-            ...
-        }
+            while (my $block = next_block) {
+                ...
+            }
 
-    It returns undef after all blocks have been iterated over. It can then
-    be called again to reiterate.
+        It returns undef after all blocks have been iterated over. It can
+        then be called again to reiterate.
 
-  first_block()
-    Returns the first block or undef if there are none. It resets the
-    iterator to the "next_block" function.
+    "first_block()"
+        Returns the first block or undef if there are none. It resets the
+        iterator to the "next_block" function.
 
-  run(&subroutine)
-    There are many ways to write your tests. You can reference each block
-    individually or you can loop over all the blocks and perform a common
-    operation. The "run" function does the looping for you, so all you need
-    to do is pass it a code block to execute for each block.
+    "run(&subroutine)"
+        There are many ways to write your tests. You can reference each
+        block individually or you can loop over all the blocks and perform a
+        common operation. The "run" function does the looping for you, so
+        all you need to do is pass it a code block to execute for each
+        block.
 
-    The "run" function takes a subroutine as an argument, and calls the sub
-    one time for each block in the specification. It passes the current
-    block object to the subroutine.
+        The "run" function takes a subroutine as an argument, and calls the
+        sub one time for each block in the specification. It passes the
+        current block object to the subroutine.
 
-        run {
-            my $block = shift;
-            is(process($block->foo), $block->bar, $block->name);
-        };
+            run {
+                my $block = shift;
+                is(process($block->foo), $block->bar, $block->name);
+            };
 
-  run_is([data_name1, data_name2])
-    Many times you simply want to see if two data sections are equivalent in
-    every block, probably after having been run through one or more filters.
-    With the "run_is" function, you can just pass the names of any two data
-    sections that exist in every block, and it will loop over every block
-    comparing the two sections.
+    "run_is([data_name1, data_name2])"
+        Many times you simply want to see if two data sections are
+        equivalent in every block, probably after having been run through
+        one or more filters. With the "run_is" function, you can just pass
+        the names of any two data sections that exist in every block, and it
+        will loop over every block comparing the two sections.
 
-        run_is 'foo', 'bar';
+            run_is 'foo', 'bar';
 
-    If no data sections are given "run_is" will try to detect them
-    automatically.
+        If no data sections are given "run_is" will try to detect them
+        automatically.
 
-    NOTE: Test::Base will silently ignore any blocks that don't contain both
-    sections.
+        NOTE: Test::Base will silently ignore any blocks that don't contain
+        both sections.
 
-  is_deep($data1, $data2, $test_name)
-    Like Test::More's "is_deeply" but uses the more correct Test::Deep
-    module.
+    "is_deep($data1, $data2, $test_name)"
+        Like Test::More's "is_deeply" but uses the more correct Test::Deep
+        module.
 
-  run_is_deeply([data_name1, data_name2])
-    Like "run_is_deeply" but uses "is_deep" which uses the more correct
-    Test::Deep.
+    "run_is_deeply([data_name1, data_name2])"
+        Like "run_is_deeply" but uses "is_deep" which uses the more correct
+        Test::Deep.
 
-  run_is_deeply([data_name1, data_name2])
-    Like "run_is" but uses "is_deeply" for complex data structure
-    comparison.
+    "run_is_deeply([data_name1, data_name2])"
+        Like "run_is" but uses "is_deeply" for complex data structure
+        comparison.
 
-  run_is_deeply([data_name1, data_name2])
-    Like "run_is_deeply" but uses "is_deep" which uses the more correct
-    Test::Deep.
+    "run_is_deeply([data_name1, data_name2])"
+        Like "run_is_deeply" but uses "is_deep" which uses the more correct
+        Test::Deep.
 
-  run_like([data_name, regexp | data_name]);
-    The "run_like" function is similar to "run_is" except the second
-    argument is a regular expression. The regexp can either be a "qr{}"
-    object or a data section that has been filtered into a regular
-    expression.
+    "run_like([data_name, regexp | data_name]);"
+        The "run_like" function is similar to "run_is" except the second
+        argument is a regular expression. The regexp can either be a "qr{}"
+        object or a data section that has been filtered into a regular
+        expression.
 
-        run_like 'foo', qr{<html.*};
-        run_like 'foo', 'match';
+            run_like 'foo', qr{<html.*};
+            run_like 'foo', 'match';
 
-  run_unlike([data_name, regexp | data_name]);
-    The "run_unlike" function is similar to "run_like", except the opposite.
+    "run_unlike([data_name, regexp | data_name]);"
+        The "run_unlike" function is similar to "run_like", except the
+        opposite.
 
-        run_unlike 'foo', qr{<html.*};
-        run_unlike 'foo', 'no_match';
+            run_unlike 'foo', qr{<html.*};
+            run_unlike 'foo', 'no_match';
 
-  run_compare(data_name1, data_name2)
-    The "run_compare" function is like the "run_is", "run_is_deeply" and the
-    "run_like" functions all rolled into one. It loops over each relevant
-    block and determines what type of comparison to do.
+    "run_compare(data_name1, data_name2)"
+        The "run_compare" function is like the "run_is", "run_is_deeply" and
+        the "run_like" functions all rolled into one. It loops over each
+        relevant block and determines what type of comparison to do.
 
-    NOTE: If you do not specify either a plan, or run any tests, the
-    "run_compare" function will automatically be run.
+        NOTE: If you do not specify either a plan, or run any tests, the
+        "run_compare" function will automatically be run.
 
-  delimiters($block_delimiter, $data_delimiter)
-    Override the default delimiters of "===" and "---".
+    "delimiters($block_delimiter, $data_delimiter)"
+        Override the default delimiters of "===" and "---".
 
-  spec_file($file_name)
-    By default, Test::Base reads its input from the DATA section. This
-    function tells it to get the spec from a file instead.
+    "spec_file($file_name)"
+        By default, Test::Base reads its input from the DATA section. This
+        function tells it to get the spec from a file instead.
 
-  spec_string($test_data)
-    By default, Test::Base reads its input from the DATA section. This
-    function tells it to get the spec from a string that has been prepared
-    somehow.
+    "spec_string($test_data)"
+        By default, Test::Base reads its input from the DATA section. This
+        function tells it to get the spec from a string that has been
+        prepared somehow.
 
-  filters( @filters_list or $filters_hashref )
-    Specify a list of additional filters to be applied to all blocks. See
-    FILTERS below.
+    "filters( @filters_list or $filters_hashref )"
+        Specify a list of additional filters to be applied to all blocks.
+        See "FILTERS" below.
 
-    You can also specify a hash ref that maps data section names to an array
-    ref of filters for that data type.
+        You can also specify a hash ref that maps data section names to an
+        array ref of filters for that data type.
 
-        filters {
-            xxx => [qw(chomp lines)],
-            yyy => ['yaml'],
-            zzz => 'eval',
-        };
+            filters {
+                xxx => [qw(chomp lines)],
+                yyy => ['yaml'],
+                zzz => 'eval',
+            };
 
-    If a filters list has only one element, the array ref is optional.
+        If a filters list has only one element, the array ref is optional.
 
-  filters_delay( [1 | 0] );
-    By default Test::Base::Block objects are have all their filters run
-    ahead of time. There are testing situations in which it is advantageous
-    to delay the filtering. Calling this function with no arguments or a
-    true value, causes the filtering to be delayed.
+    "filters_delay( [1 | 0] );"
+        By default Test::Base::Block objects are have all their filters run
+        ahead of time. There are testing situations in which it is
+        advantageous to delay the filtering. Calling this function with no
+        arguments or a true value, causes the filtering to be delayed.
 
-        use Test::Base;
-        filters_delay;
-        plan tests => 1 * blocks;
-        for my $block (blocks) {
-            ...
-            $block->run_filters;
-            ok($block->is_filtered);
-            ...
-        }
+            use Test::Base;
+            filters_delay;
+            plan tests => 1 * blocks;
+            for my $block (blocks) {
+                ...
+                $block->run_filters;
+                ok($block->is_filtered);
+                ...
+            }
 
-    In the code above, the filters are called manually, using the
-    "run_filters" method of Test::Base::Block. In functions like "run_is",
-    where the tests are run automatically, filtering is delayed until right
-    before the test.
+        In the code above, the filters are called manually, using the
+        "run_filters" method of Test::Base::Block. In functions like
+        "run_is", where the tests are run automatically, filtering is
+        delayed until right before the test.
 
-  filter_arguments()
-    Return the arguments after the equals sign on a filter.
+    "filter_arguments()"
+        Return the arguments after the equals sign on a filter.
 
-        sub my_filter {
-            my $args = filter_arguments;
-            # is($args, 'whazzup');
-            ...
-        }
+            sub my_filter {
+                my $args = filter_arguments;
+                # is($args, 'whazzup');
+                ...
+            }
 
-        __DATA__
-        === A test
-        --- data my_filter=whazzup
+            __DATA__
+            === A test
+            --- data my_filter=whazzup
 
-  tie_output()
-    You can capture STDOUT and STDERR for operations with this function:
+    "tie_output()"
+        You can capture STDOUT and STDERR for operations with this function:
 
-        my $out = '';
-        tie_output(*STDOUT, $buffer);
-        print "Hey!\n";
-        print "Che!\n";
-        untie *STDOUT;
-        is($out, "Hey!\nChe!\n");
+            my $out = '';
+            tie_output(*STDOUT, $buffer);
+            print "Hey!\n";
+            print "Che!\n";
+            untie *STDOUT;
+            is($out, "Hey!\nChe!\n");
 
-  no_diff()
-    Turn off diff support for is() in a test file.
+    "no_diff()"
+        Turn off diff support for is() in a test file.
 
-  default_object()
-    Returns the default Test::Base object. This is useful if you feel the
-    need to do an OO operation in otherwise functional test code. See OO
-    below.
+    "default_object()"
+        Returns the default Test::Base object. This is useful if you feel
+        the need to do an OO operation in otherwise functional test code.
+        See OO below.
 
-  WWW() XXX() YYY() ZZZ()
-    These debugging functions are exported from the Spiffy.pm module. See
-    Spiffy for more info.
+    "WWW() XXX() YYY() ZZZ()"
+        These debugging functions are exported from the Spiffy.pm module.
+        See Spiffy for more info.
 
-  croak() carp() cluck() confess()
-    You can use the functions from the Carp module without needing to import
-    them. Test::Base does it for you by default.
+    "croak() carp() cluck() confess()"
+        You can use the functions from the Carp module without needing to
+        import them. Test::Base does it for you by default.
 
 TEST SPECIFICATION
     Test::Base allows you to specify your test data in an external file, the
@@ -327,16 +330,16 @@ TEST SPECIFICATION
     Here is a code example:
 
         use Test::Base;
-    
+
         delimiters qw(### :::);
 
         # test code here
 
         __END__
-    
+
         ### Test One
         We want to see if foo and bar
-        are really the same... 
+        are really the same...
         ::: foo
         a foo line
         another foo line
@@ -346,11 +349,11 @@ TEST SPECIFICATION
         another bar line
 
         ### Test Two
-    
+
         ::: foo
         some foo line
         some other foo line
-    
+
         ::: bar
         some bar line
         some other bar line
@@ -364,7 +367,7 @@ TEST SPECIFICATION
     "###" and the data delimiter is ":::".
 
     The default block delimiter is "===" and the default data delimiter is
-    "---".
+    "--- ".
 
     There are some special data section names used for control purposes:
 
@@ -477,7 +480,7 @@ FILTERS
         sub foo {
             transform(shift);
         }
-        
+
         sub Test::Base::Filter::bar {
             my $self = shift;       # The Test::Base::Filter object
             my $data = shift;
@@ -495,9 +498,9 @@ FILTERS
 
     Note that filters defined in the "main" namespace can look like:
 
-      sub filter9 {
-          s/foo/bar/;
-      }
+        sub filter9 {
+            s/foo/bar/;
+        }
 
     since Test::Base automatically munges the input string into $_ variable
     and checks the return value of the function to see if it looks like a
@@ -525,34 +528,37 @@ OO
 
         # ... etc
 
-THE "Test::Base::Block" CLASS
+THE `TEST::BASE::BLOCK` CLASS
     In Test::Base, blocks are exposed as Test::Base::Block objects. This
     section lists the methods that can be called on a Test::Base::Block
     object. Of course, each data section name is also available as a method.
 
-  name()
-    This is the optional short description of a block, that is specified on
-    the block separator line.
+    "name()"
+        This is the optional short description of a block, that is specified
+        on the block separator line.
 
-  description()
-    This is an optional long description of the block. It is the text taken
-    from between the block separator and the first data section.
+    "description()"
+        This is an optional long description of the block. It is the text
+        taken from between the block separator and the first data section.
 
-  seq_num()
-    Returns a sequence number for this block. Sequence numbers begin with 1.
+    "seq_num()"
+        Returns a sequence number for this block. Sequence numbers begin
+        with 1.
 
-  blocks_object()
-    Returns the Test::Base object that owns this block.
+    "blocks_object()"
+        Returns the Test::Base object that owns this block.
 
-  run_filters()
-    Run the filters on the data sections of the blocks. You don't need to
-    use this method unless you also used the "filters_delay" function.
+    "run_filters()"
+        Run the filters on the data sections of the blocks. You don't need
+        to use this method unless you also used the "filters_delay"
+        function.
 
-  is_filtered()
-    Returns true if filters have already been run for this block.
+    "is_filtered()"
+        Returns true if filters have already been run for this block.
 
-  original_values()
-    Returns a hash of the original, unfiltered values of each data section.
+    "original_values()"
+        Returns a hash of the original, unfiltered values of each data
+        section.
 
 SUBCLASSING
     One of the nicest things about Test::Base is that it is easy to
@@ -632,11 +638,10 @@ AUTHOR
     Ingy döt Net <ingy@cpan.org>
 
 COPYRIGHT
-    Copyright (c) 2006, 2008, 2009, 2011, 2014. Ingy döt Net. Copyright (c)
-    2005. Brian Ingerson.
+    Copyright 2005-2014. Ingy döt Net.
 
     This program is free software; you can redistribute it and/or modify it
     under the same terms as Perl itself.
 
-    See http://www.perl.com/perl/misc/Artistic.html
+    See <http://www.perl.com/perl/misc/Artistic.html>
 

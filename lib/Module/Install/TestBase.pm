@@ -6,7 +6,7 @@ use Module::Install::Base;
 
 use vars qw($VERSION @ISA);
 BEGIN {
-    $VERSION = '0.60';
+    $VERSION = '0.63';
     @ISA     = 'Module::Install::Base';
 }
 
