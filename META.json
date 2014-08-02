@@ -40,6 +40,12 @@
             "Spiffy" : "0.30",
             "perl" : "v5.8.1"
          }
+      },
+      "test" : {
+         "requires" : {
+            "Algorithm::Diff" : "0",
+            "Text::Diff" : "0"
+         }
       }
    },
    "release_status" : "stable",
@@ -54,6 +60,6 @@
          "web" : "https://github.com/ingydotnet/test-base-pm"
       }
    },
-   "version" : "0.63"
+   "version" : "0.64"
 }
 

@@ -22,7 +22,11 @@ my %WriteMakefileArgs = (
   "PREREQ_PM" => {
     "Spiffy" => "0.30"
   },
-  "VERSION" => "0.63",
+  "TEST_REQUIRES" => {
+    "Algorithm::Diff" => 0,
+    "Text::Diff" => 0
+  },
+  "VERSION" => "0.64",
   "test" => {
     "TESTS" => "t/*.t"
   }
@@ -30,7 +34,9 @@ my %WriteMakefileArgs = (
 
 
 my %FallbackPrereqs = (
-  "Spiffy" => "0.30"
+  "Algorithm::Diff" => 0,
+  "Spiffy" => "0.30",
+  "Text::Diff" => 0
 );
 
 
