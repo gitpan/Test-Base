@@ -26,7 +26,7 @@ my %WriteMakefileArgs = (
     "Algorithm::Diff" => "1.15",
     "Text::Diff" => "0.35"
   },
-  "VERSION" => "0.72",
+  "VERSION" => "0.73",
   "test" => {
     "TESTS" => "t/*.t"
   }
