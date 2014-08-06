@@ -1,3 +1,6 @@
+0.69 Wed Aug  6 09:09:34 PDT 2014
+ - Add $VERSION back into Test::Base
+
 0.68 Wed Aug  6 08:56:09 PDT 2014
  - PR/11 and fixes
 
