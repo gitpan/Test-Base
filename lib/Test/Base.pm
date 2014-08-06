@@ -1,5 +1,5 @@
 package Test::Base;
-our $VERSION = '0.70';
+our $VERSION = '0.71';
 
 use Spiffy -Base;
 use Spiffy ':XXX';
@@ -256,8 +256,8 @@ sub is($$;$) {
     }
     else {
         $name = '' unless defined $name;
-        ok $actual eq $expected,
-           $name . "\n" . Text::Diff::diff(\$expected, \$actual);
+        ok $actual eq $expected, $name;
+        diag Text::Diff::diff(\$expected, \$actual);
     }
 }
 
