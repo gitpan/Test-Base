@@ -20,13 +20,14 @@ my %WriteMakefileArgs = (
   "LICENSE" => "perl",
   "NAME" => "Test::Base",
   "PREREQ_PM" => {
+    "Filter::Util::Call" => 0,
     "Spiffy" => "0.40"
   },
   "TEST_REQUIRES" => {
     "Algorithm::Diff" => "1.15",
     "Text::Diff" => "0.35"
   },
-  "VERSION" => "0.73",
+  "VERSION" => "0.74",
   "test" => {
     "TESTS" => "t/*.t"
   }
@@ -35,6 +36,7 @@ my %WriteMakefileArgs = (
 
 my %FallbackPrereqs = (
   "Algorithm::Diff" => "1.15",
+  "Filter::Util::Call" => 0,
   "Spiffy" => "0.40",
   "Text::Diff" => "0.35"
 );

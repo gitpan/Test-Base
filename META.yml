@@ -23,10 +23,11 @@ no_index:
 recommends:
   Test::Deep: '0'
 requires:
+  Filter::Util::Call: '0'
   Spiffy: '0.40'
   perl: v5.8.1
 resources:
   bugtracker: https://github.com/ingydotnet/test-base-pm/issues
   homepage: https://github.com/ingydotnet/test-base-pm
   repository: https://github.com/ingydotnet/test-base-pm.git
-version: '0.73'
+version: '0.74'

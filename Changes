@@ -1,3 +1,7 @@
+0.74 Wed Aug  6 13:36:29 PDT 2014
+ - Add dependency on Filter::Util::Call just to be sure
+ - Spiffy requires it and we already require Spiffy
+
 0.73 Wed Aug  6 13:24:45 PDT 2014
  - Doc fix. Thanks @Perlover++
 
@@ -187,7 +191,7 @@
  - Embed perl code in a test specification. This is still experimental and
    undocumented.
 
-0.25
+0.25 Sat May   7 01:02:03 PDT 2005
  - Add `LAST` special section name to stop at a certain test.
  - Add test for strict/warnings filter.
  - Change 'description' method to 'name'.
