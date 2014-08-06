@@ -3,8 +3,8 @@ abstract: 'A Data Driven Testing Framework'
 author:
   - 'Ingy döt Net <ingy@cpan.org>'
 build_requires:
-  Algorithm::Diff: '0'
-  Text::Diff: '0'
+  Algorithm::Diff: '1.15'
+  Text::Diff: '0.35'
 configure_requires:
   ExtUtils::MakeMaker: '6.30'
 dynamic_config: 0
@@ -29,4 +29,4 @@ resources:
   bugtracker: https://github.com/ingydotnet/test-base-pm/issues
   homepage: https://github.com/ingydotnet/test-base-pm
   repository: https://github.com/ingydotnet/test-base-pm.git
-version: '0.67'
+version: '0.68'

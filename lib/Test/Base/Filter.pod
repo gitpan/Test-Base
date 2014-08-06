@@ -295,11 +295,11 @@ structure. Requires YAML.pm.
 
 =head1 AUTHOR
 
-Ingy döt Net <ingy@cpan.org>
+Ingy dÃ¶t Net <ingy@cpan.org>
 
 =head1 COPYRIGHT
 
-Copyright 2005-2014. Ingy döt Net. All rights reserved.
+Copyright 2005-2014. Ingy dÃ¶t Net. All rights reserved.
 
 This program is free software; you can redistribute it and/or modify it under
 the same terms as Perl itself.

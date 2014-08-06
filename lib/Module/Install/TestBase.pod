@@ -37,11 +37,11 @@ no longer any burden on the person installing your module.
 
 =head1 AUTHOR
 
-ingy döt Net <ingy@cpan.org>
+ingy dÃ¶t Net <ingy@cpan.org>
 
 =head1 COPYRIGHT
 
-Copyright 2005-2014. Ingy döt Net.
+Copyright 2005-2014. Ingy dÃ¶t Net.
 
 This program is free software; you can redistribute it and/or modify it under
 the same terms as Perl itself.
