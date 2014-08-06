@@ -37,7 +37,7 @@
             "Test::Deep" : "0"
          },
          "requires" : {
-            "Spiffy" : "0.30",
+            "Spiffy" : "0.40",
             "perl" : "v5.8.1"
          }
       },
@@ -60,6 +60,6 @@
          "web" : "https://github.com/ingydotnet/test-base-pm"
       }
    },
-   "version" : "0.71"
+   "version" : "0.72"
 }
 
