@@ -1,3 +1,6 @@
+0.70 Wed Aug  6 09:30:03 PDT 2014
+ - Fixed doc typo
+
 0.69 Wed Aug  6 09:09:34 PDT 2014
  - Add $VERSION back into Test::Base
 
