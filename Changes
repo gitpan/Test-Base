@@ -1,3 +1,6 @@
+0.75 Wed Aug  6 22:04:50 PDT 2014
+ - Use PR/14 which makes old and new Test::Builders work. exodist++
+
 0.74 Wed Aug  6 13:36:29 PDT 2014
  - Add dependency on Filter::Util::Call just to be sure
  - Spiffy requires it and we already require Spiffy

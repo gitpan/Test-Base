@@ -30,4 +30,4 @@ resources:
   bugtracker: https://github.com/ingydotnet/test-base-pm/issues
   homepage: https://github.com/ingydotnet/test-base-pm
   repository: https://github.com/ingydotnet/test-base-pm.git
-version: '0.74'
+version: '0.75'
