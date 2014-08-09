@@ -25,9 +25,10 @@ my %WriteMakefileArgs = (
   },
   "TEST_REQUIRES" => {
     "Algorithm::Diff" => "1.15",
+    "ExtUtils::MakeMaker" => "6.52",
     "Text::Diff" => "0.35"
   },
-  "VERSION" => "0.78",
+  "VERSION" => "0.79",
   "test" => {
     "TESTS" => "t/*.t"
   }
@@ -36,6 +37,7 @@ my %WriteMakefileArgs = (
 
 my %FallbackPrereqs = (
   "Algorithm::Diff" => "1.15",
+  "ExtUtils::MakeMaker" => "6.52",
   "Filter::Util::Call" => 0,
   "Spiffy" => "0.40",
   "Text::Diff" => "0.35"

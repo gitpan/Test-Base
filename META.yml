@@ -4,6 +4,7 @@ author:
   - 'Ingy döt Net <ingy@cpan.org>'
 build_requires:
   Algorithm::Diff: '1.15'
+  ExtUtils::MakeMaker: '6.52'
   Text::Diff: '0.35'
 configure_requires:
   ExtUtils::MakeMaker: '6.30'
@@ -30,4 +31,4 @@ resources:
   bugtracker: https://github.com/ingydotnet/test-base-pm/issues
   homepage: https://github.com/ingydotnet/test-base-pm
   repository: https://github.com/ingydotnet/test-base-pm.git
-version: '0.78'
+version: '0.79'
