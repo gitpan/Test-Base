@@ -1,3 +1,6 @@
+0.81 Sat Aug 16 02:52:12 PDT 2014
+ - Eliminate File::Basename from test/
+
 0.80 Fri Aug 15 20:49:55 PDT 2014
  - Add t/000-require-modules.t
 
