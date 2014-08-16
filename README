@@ -529,7 +529,7 @@ OO
 
         # ... etc
 
-THE `TEST::BASE::BLOCK` CLASS
+THE "TEST::BASE::BLOCK" CLASS
     In Test::Base, blocks are exposed as Test::Base::Block objects. This
     section lists the methods that can be called on a Test::Base::Block
     object. Of course, each data section name is also available as a method.

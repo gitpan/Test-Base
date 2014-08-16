@@ -13,6 +13,7 @@ lib/Test/Base.pm
 lib/Test/Base.pod
 lib/Test/Base/Filter.pm
 lib/Test/Base/Filter.pod
+t/000-require-modules.t
 t/Test-Less/index.txt
 t/TestBaseSubclass.pm
 t/TestBaseTest.pm
