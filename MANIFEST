@@ -7,8 +7,6 @@ META.json
 META.yml
 Makefile.PL
 README
-lib/Module/Install/TestBase.pm
-lib/Module/Install/TestBase.pod
 lib/Test/Base.pm
 lib/Test/Base.pod
 lib/Test/Base/Filter.pm

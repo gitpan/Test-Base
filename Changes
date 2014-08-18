@@ -1,3 +1,8 @@
+0.85 Mon Aug 18 08:07:52 PDT 2014
+ - Pull Module::Install::TestBase out of Test::Base
+ - It will be released in separate dist
+ - Was causing Test::Base to fail tests
+
 0.84 Sat Aug 16 15:08:32 PDT 2014
  - Remove .gitignore
  - Fix Meta error. s/zild/=zild/
