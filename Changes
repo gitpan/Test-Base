@@ -1,3 +1,6 @@
+0.86 Mon Aug 18 08:29:20 PDT 2014
+ - Fix for issue/15
+
 0.85 Mon Aug 18 08:07:52 PDT 2014
  - Pull Module::Install::TestBase out of Test::Base
  - It will be released in separate dist
